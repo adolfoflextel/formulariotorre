@@ -10,3 +10,148 @@
     <p>Este é o meu primeiro site publicado no GitHub Pages!</p>
 </body>
 </html>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Pós Atendimento</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; background-color: #f4f4f4; color: #333; transition: background 0.3s, color 0.3s; }
+        h2 { text-align: center; }
+        .dark-mode h2 { color: #f4f4f4; }
+        .form-container { padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: white; margin-bottom: 20px; display: none; }
+        label { display: flex; flex-direction: column; font-weight: bold; margin-top: 5px; }
+        input { width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 10px; padding: 10px; cursor: pointer; width: 100%; border: none; border-radius: 5px; }
+        .generate { background-color: #28a745; color: white; }
+        .copy { background-color: #007bff; color: white; }
+        .clear { background-color: #dc3545; color: white; }
+        .dark-mode { background-color: #333; color: #f4f4f4; }
+        .dark-mode .form-container { background: #444; border-color: #666; }
+        
+        #geradoTexto {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .dark-mode #geradoTexto {
+            background: #444;
+            border-color: #666;
+            color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h2>Selecione o Tipo de Pós Atendimento</h2>
+    <button onclick="toggleDarkMode()">Alternar Modo Escuro</button>
+    
+    <label for="formSelect">Tipo de Atendimento:</label>
+    <select id="formSelect" onchange="showForm()">
+        <option value="">-- Selecione --</option>
+        <option value="sucesso">Pós Atendimento: Com Sucesso</option>
+        <option value="recusou">Pós Atendimento: Cliente Se Recusou a Responder</option>
+        <option value="sem_sucesso">Pós Atendimento: Contato Sem Sucesso</option>
+    </select>
+
+    <div id="sucesso" class="form-container">
+        <label for="agenteSucesso">AGENTE:</label>
+        <input type="text" id="agenteSucesso">
+        
+        <label for="protocoloSucesso">PROTOCOLO DA LIGAÇÃO:</label>
+        <input type="text" id="protocoloSucesso">
+        
+        <label for="nomeTecnico">NOME DE QUEM ATENDEU TÉCNICO:</label>
+        <input type="text" id="nomeTecnico">
+        
+        <label for="notaSucesso">NOTA:</label>
+        <input type="number" id="notaSucesso">
+    </div>
+
+    <div id="recusou" class="form-container">
+        <label for="agenteRecusou">AGENTE:</label>
+        <input type="text" id="agenteRecusou">
+        
+        <label for="protocoloRecusou">PROTOCOLO:</label>
+        <input type="text" id="protocoloRecusou">
+    </div>
+
+    <div id="sem_sucesso" class="form-container">
+        <label for="agenteSemSucesso">AGENTE:</label>
+        <input type="text" id="agenteSemSucesso">
+        
+        <label for="protocoloSemSucesso">PROTOCOLO DA LIGAÇÃO:</label>
+        <input type="text" id="protocoloSemSucesso">
+    </div>
+
+    <button class="generate" onclick="gerarTexto()">Gerar Texto 📄</button>
+    <button class="copy" onclick="copiarTexto()">Copiar Texto 📋</button>
+    <button class="clear" onclick="limparFormulario()">Limpar Campos ❌</button>
+
+    <h3>Prévia do Texto Gerado:</h3>
+    <pre id="geradoTexto"></pre>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+        }
+
+        function showForm() {
+            document.querySelectorAll('.form-container').forEach(form => form.style.display = 'none');
+            const selected = document.getElementById('formSelect').value;
+            if (selected) {
+                document.getElementById(selected).style.display = 'block';
+            }
+            document.getElementById('geradoTexto').style.display = 'none';
+        }
+
+        function gerarTexto() {
+            let texto = "";
+            const selectValue = document.getElementById('formSelect').value;
+            
+            if (selectValue) {
+                const inputs = document.querySelectorAll(`#${selectValue} input`);
+                texto += `Pós Atendimento: ${selectValue.replace('_', ' ').toUpperCase()}\n\n`;
+                inputs.forEach(input => {
+                    texto += `${input.previousElementSibling.textContent.trim()} ${input.value}\n`;
+                });
+            }
+
+            const preTag = document.getElementById('geradoTexto');
+            preTag.textContent = texto;
+            preTag.style.display = 'block';
+
+            const blob = new Blob([texto], { type: "text/plain" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "pos_atendimento.txt";
+            a.click();
+        }
+
+        function copiarTexto() {
+            const texto = document.getElementById('geradoTexto').textContent;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("Texto copiado com sucesso!");
+            }).catch(() => {
+                alert("Erro ao copiar o texto!");
+            });
+        }
+
+        function limparFormulario() {
+            const selectValue = document.getElementById('formSelect').value;
+            if (selectValue) {
+                document.querySelectorAll(`#${selectValue} input`).forEach(input => input.value = '');
+            }
+            document.getElementById('geradoTexto').textContent = '';
+            document.getElementById('geradoTexto').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
