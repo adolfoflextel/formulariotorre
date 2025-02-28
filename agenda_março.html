@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links de Acesso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            display: block;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        a:hover {
+            background: #0056b3;
+        }
+    </style>
+    <script>
+        function filterLinks() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let links = document.querySelectorAll('ul li');
+            
+            links.forEach(link => {
+                let text = link.textContent.toLowerCase();
+                if (text.includes(input)) {
+                    link.style.display = '';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Links de Acesso</h2>
+        <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
+        <ul>
+            <li><a href="https://docs.google.com/spreadsheets/d/1y-4Y5XlHemc3GpsYyxVT7tL89e5sU57v8igTLPy1yyw/edit?usp=drive_link" target="_blank">JP/67 Campo Grande</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1_4nAB8tNb0jYDSiCcXNuaMoiaYQMMfLuyrOAD27uFhY/edit?usp=drive_link" target="_blank">JP Rochedo e Corguinho</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1bKpbbXMRnp5Qo85TwHdC-UUSOqMSRMXCrhzpnEH6NCs/edit?usp=drive_link" target="_blank">Wi-Fi Net</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1dsJVNhEz6mTYe1yD4GQxriYZDR5GQeL0yMzrknZNs0w/edit?usp=drive_link" target="_blank">Connect</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/10SkTjJzK6x2btzmGqirvtSmfavTzfx9wEVIut855n_Q/edit?usp=drive_link" target="_blank">Flextel Alcinópolis</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1IZNdmIoAjSBy--E-EyuRZROol_DtVgIq9f3rXTWTsjk/edit?usp=drive_link" target="_blank">Flextel Bandeirantes</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1tEYV5ebIpkCzuP_Tf9vWn11J-E3AsIuZ2cQpwGQH3WE/edit?usp=drive_link" target="_blank">Flextel Campo Grande</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1_cVvk7XkPOvHR3ui5ZUPt4vXg8dZiiiY8TnB2acDJ6s/edit?usp=drive_link" target="_blank">Flextel Coxim</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1N1DPJ-ZBM5Zi0_h3TL51OUkW0B_IPuMnowgiFHMpZuw/edit?usp=drive_link" target="_blank">Flextel Jaraguari</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1nJS6QhiGnchsrJEZiGBQfeegkxNWq4Xldq7MKzr6W1s/edit?usp=drive_link" target="_blank">Flextel Rio Brilhante</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1nIt0XJkAWyyalwTaun3HmgFroTPceVy2DhBISi4TU6E/edit?usp=drive_link" target="_blank">Flextel Rio Negro</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1nKqM0lVZgdbDRAbGXPilOkE26WdDl0pa0FAnOGUhoGo/edit?usp=drive_link" target="_blank">Flextel Rio Verde</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1qCkZ-DAU-5b5RV59-kPJVkstfsaEW9GVzZRVWcSodbY/edit?usp=drive_link" target="_blank">Flextel São Gabriel do Oeste</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1GudX-YcWirFrKhH_K_tMnhhtfn1RfKrESD9t0cac5Sg/edit?usp=drive_link" target="_blank">Flextel Sidrolândia</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1LOmTefBmZ7qyKOYmmFf6N5-M5tQ2JxH7RpZ1zyFmb5o/edit?usp=drive_link" target="_blank">Flextel Sonora</a></li>
+        </ul>
+    </div>
+</body>
+</html>
