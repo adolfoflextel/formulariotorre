@@ -1,0 +1,466 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relação OLT's VLAN</title>
+    <style>
+        /* Modo Claro (default) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #filterButtons {
+            margin-bottom: 20px;
+        }
+
+        #filterButtons button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Modo Claro: Cores dos Botões */
+        .flextel {
+            background-color: lightgreen;
+        }
+        .wifi {
+            background-color: #007bff;
+        }
+        .connect {
+            background-color: #d85f00;
+        }
+        .internet67 {
+            background-color: yellow;
+            color: black;
+        }
+        .jpnet {
+            background-color: green;
+        }
+        .todos {
+            background-color: black;
+        }
+
+        /* Modo Escuro */
+        body.dark-mode {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode h1 {
+            color: #f4f4f9;
+        }
+
+        body.dark-mode #filterButtons button {
+            background-color: #444;
+            color: white;
+        }
+
+        body.dark-mode .flextel {
+            background-color: #8bc34a;
+        }
+        body.dark-mode .wifi {
+            background-color: #3a8ac3;
+        }
+        body.dark-mode .connect {
+            background-color: #f57c00;
+        }
+        body.dark-mode .internet67 {
+            background-color: #ffeb3b;
+            color: black;
+        }
+        body.dark-mode .jpnet {
+            background-color: #388e3c;
+        }
+        body.dark-mode .todos {
+            background-color: #212121;
+        }
+
+        #filterButtons button:hover {
+            opacity: 0.8;
+        }
+
+        #searchInput {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #resultados {
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        #resultados th, #resultados td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #resultados th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #resultados td {
+            background-color: white;
+        }
+
+        .fixo {
+            position: sticky;
+            left: 0;
+            background-color: #f4f4f9;
+            z-index: 1;
+        }
+
+        .fixo th, .fixo td {
+            z-index: 2;
+        }
+
+        /* Botão de Modo Claro/Escuro */
+        #toggleModeButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #toggleModeButton:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relação OLT's VLAN</h1>
+    
+    <!-- Botão para alternar entre modos -->
+    <button id="toggleModeButton" onclick="toggleMode()">Modo Escuro</button>
+    
+    <!-- Botões de Filtro de Filial -->
+    <div id="filterButtons">
+        <button class="flextel" onclick="filtrarPorFilial('FLEXTEL')">FLEXTEL</button>
+        <button class="wifi" onclick="filtrarPorFilial('WIFI')">WIFI</button>
+        <button class="connect" onclick="filtrarPorFilial('CONNECT')">CONNECT</button>
+        <button class="internet67" onclick="filtrarPorFilial('67 INTERNET')">67 INTERNET</button>
+        <button class="jpnet" onclick="filtrarPorFilial('JP NET')">JP NET</button>
+        <button class="todos" onclick="limparFiltro()">Todos</button>
+    </div>
+
+    <!-- Barra de Pesquisa -->
+    <input type="text" id="searchInput" placeholder="Digite o termo de busca...">
+    
+    <!-- Tabela de Resultados -->
+    <table id="resultados">
+        <thead>
+            <tr>
+                <th class="fixo">TRANSMISSOR</th>
+                <th>VLAN</th>
+                <th>F601</th>
+                <th>F670</th>
+                <th>F6600</th>
+                <th>HUAWEI BRIDGE</th>
+                <th>HUAWEI ROTEADA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Resultados serão inseridos aqui dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        // Script do filtro (sem alterações)
+        const dadosPorFilial = {
+            "FLEXTEL": [{ transmissor: "ZTE_NASSER_WIFI", vlan: 3007, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_CAIÇARA_67", vlan: 3022, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_TIJUCA_FLEXTEL", vlan: 3005, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_STA_EMILIA_FLEXTEL", vlan: 3004, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "FHTT_STA_EMILIA_FLEXTEL", vlan: 3004, f601: 1, f670: 1, f6600: 1, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_INAPOLIS_FLEXTEL", vlan: 3003, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_NCG_WIFI", vlan: 3002, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "FHTT_NCG_WIFI", vlan: 3002, f601: 1, f670: 1, f6600: 1, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_AEROPORTO_FLEXTEL", vlan: 3001, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_STO_AMARO_FLEXTEL", vlan: 3022, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "HWEI_RITA_VIEIRA_CONNECT", vlan: 102, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 4, huaweiRoteada: 35 },
+            { transmissor: "HWEI_DHAMMA_CONNECT", vlan: 102, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 4, huaweiRoteada: 35 },
+            { transmissor: "HWEI_CAMPO_NOBRE_JPNET", vlan: 103, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 32, huaweiRoteada: 36 },
+            { transmissor: "FHTT_JARAGUARI_FLEXTEL", vlan: 3994, f601: 23, f670: 23, f6600: 23, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "FHTT_BANDEIRANTES_FLEXTEL", vlan: 3993, f601: 23, f670: 23, f6600: 23, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_SGO_FLEXTEL", vlan: 3992, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_RIO_VERDE_FLEXTEL", vlan: 3996, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "FHTT_COXIM_FLEXTEL", vlan: 3998, f601: 23, f670: 23, f6600: 23, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_SONORA_FLEXTEL", vlan: 3991, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "HWEI_RIONEGRO_FLEXTEL", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 39, huaweiRoteada: 40 },
+            { transmissor: "ZTE_JARDIM_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_GUIA_LOPES_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_MIRANDA_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_CORUMBA_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_NOVA_CORUMBA_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_LADÁRIO_67", vlan: "SEM ATENDIMENTO", f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "HWEI_HOR_TOPNET", vlan: 160, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 33, huaweiRoteada: 38 },
+            { transmissor: "HWEI_GND_TOPNET", vlan: 160, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 33, huaweiRoteada: 38 },
+            { transmissor: "HWEI_SE_TOPNET", vlan: 160, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 33, huaweiRoteada: 38 },
+            { transmissor: "HWEI_CENTRAL_VIBE", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 34, huaweiRoteada: 37 },
+            { transmissor: "HWEI_CARIOCA_VIBE", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 34, huaweiRoteada: 37 },
+            { transmissor: "HWEI_ROCHEDO_VIBE", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 34, huaweiRoteada: 37 },
+            { transmissor: "HWEI_SID_FLEXTEL", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 39, huaweiRoteada: 40 },
+            { transmissor: "HWEI_NOROESTE_VIBE", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 34, huaweiRoteada: 37 },
+            { transmissor: "HWEI_CORGUINHO_VIBE", vlan: 203, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 34, huaweiRoteada: 37 },
+            { transmissor: "ZTE_ALCINOPOLIS_FLEXTEL", vlan: 710, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" },
+            { transmissor: "ZTE_FIGUEIRAO_FIBRAPLUS", vlan: 711, f601: 13, f670: 21, f6600: 21, huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO" }
+],
+            "WIFI": [{ "transmissor": "ZTE_NASSER_WIFI", "vlan": 4002, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_CAIÇARA_67", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_TIJUCA_FLEXTEL", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_STA_EMILIA_FLEXTEL", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "FHTT_STA_EMILIA_FLEXTEL", "vlan": 4003, "f601": 1, "f670": 1, "f6600": 1, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_INAPOLIS_FLEXTEL", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_NCG_WIFI", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "FHTT_NCG_WIFI", "vlan": 2001, "f601": 1, "f670": 1, "f6600": 1, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_AEROPORTO_FLEXTEL", "vlan": 4011, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_STO_AMARO_FLEXTEL", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "HWEI_RITA_VIEIRA_CONNECT", "vlan": 105, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 26, "huaweiRoteada": 32 },
+    { "transmissor": "HWEI_DHAMMA_CONNECT", "vlan": 105, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 26, "huaweiRoteada": 32 },
+    { "transmissor": "HWEI_CAMPO_NOBRE_JPNET", "vlan": 4015, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 27, "huaweiRoteada": 31 },
+    { "transmissor": "FHTT_JARAGUARI_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "FHTT_BANDEIRANTES_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_SGO_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_RIO_VERDE_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "FHTT_COXIM_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_SONORA_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_JARDIM_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_GUIA_LOPES_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_MIRANDA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_NOVA_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "ZTE_LADÁRIO_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+    { "transmissor": "HWEI_HOR_TOPNET", "vlan": 161, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 25, "huaweiRoteada": 30 },
+    { "transmissor": "HWEI_GND_TOPNET", "vlan": 161, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 25, "huaweiRoteada": 30 },
+    { "transmissor": "HWEI_SE_TOPNET", "vlan": 161, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 25, "huaweiRoteada": 30 },
+    { "transmissor": "HWEI_CENTRAL_VIBE", "vlan": 204, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 38 },
+    { "transmissor": "HWEI_CARIOCA_VIBE", "vlan": 204, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 29 },
+    { "transmissor": "HWEI_ROCHEDO_VIBE", "vlan": 204, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 29 },
+    { "transmissor": "HWEI_NOROESTE_VIBE", "vlan": 204, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 29 },
+    { "transmissor": "HWEI_CORGUINHO_VIBE", "vlan": 204, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 29 }
+],
+            "CONNECT": [{ "transmissor": "ZTE_NASSER_WIFI", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CAIÇARA_67", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_TIJUCA_FLEXTEL", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STA_EMILIA_FLEXTEL", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_STA_EMILIA_FLEXTEL", "vlan": 4032, "f601": 15, "f670": 15, "f6600": 15, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_INAPOLIS_FLEXTEL", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NCG_WIFI", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_NCG_WIFI", "vlan": 4032, "f601": 15, "f670": 15, "f6600": 15, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_AEROPORTO_FLEXTEL", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STO_AMARO_FLEXTEL", "vlan": 4032, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_RITA_VIEIRA_CONNECT", "vlan": 100, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 20, "huaweiRoteada": 22 },
+  { "transmissor": "HWEI_DHAMMA_CONNECT", "vlan": 100, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 21, "huaweiRoteada": 34 },
+  { "transmissor": "HWEI_CAMPO_NOBRE_JPNET", "vlan": 4016, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 29, "huaweiRoteada": 33 },
+  { "transmissor": "FHTT_JARAGUARI_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_BANDEIRANTES_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SGO_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_RIO_VERDE_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_COXIM_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SONORA_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_JARDIM_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_GUIA_LOPES_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_MIRANDA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NOVA_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_LADÁRIO_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_HOR_TOPNET", "vlan": 162, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 32 },
+  { "transmissor": "HWEI_GND_TOPNET", "vlan": 162, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 32 },
+  { "transmissor": "HWEI_SE_TOPNET", "vlan": 162, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 28, "huaweiRoteada": 32 },
+  { "transmissor": "HWEI_CENTRAL_VIBE", "vlan": 205, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 30, "huaweiRoteada": 31 },
+  { "transmissor": "HWEI_CARIOCA_VIBE", "vlan": 205, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 30, "huaweiRoteada": 31 },
+  { "transmissor": "HWEI_ROCHEDO_VIBE", "vlan": 205, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 30, "huaweiRoteada": 31 },
+  { "transmissor": "HWEI_CORGUINHO_VIBE", "vlan": 205, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 30, "huaweiRoteada": 31 }
+],
+            "67 INTERNET": [{ "transmissor": "ZTE_NASSER_WIFI", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CAIÇARA_67", "vlan": 4013, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_TIJUCA_FLEXTEL", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STA_EMILIA_FLEXTEL", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_STA_EMILIA_FLEXTEL", "vlan": 3023, "f601": 32, "f670": 32, "f6600": 32, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_INAPOLIS_FLEXTEL", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NCG_WIFI", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_NCG_WIFI", "vlan": 3023, "f601": 32, "f670": 32, "f6600": 32, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_AEROPORTO_FLEXTEL", "vlan": 3023, "f601": 13, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STO_AMARO_FLEXTEL", "vlan": 4012, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_RITA_VIEIRA_CONNECT", "vlan": 103, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 37, "huaweiRoteada": 38 },
+  { "transmissor": "HWEI_DHAMMA_CONNECT", "vlan": 103, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 37, "huaweiRoteada": 38 },
+  { "transmissor": "HWEI_CAMPO_NOBRE_JPNET", "vlan": 102, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 29, "huaweiRoteada": 36 },
+  { "transmissor": "FHTT_JARAGUARI_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": 31, "f670": 31, "f6600": 31, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_BANDEIRANTES_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": 29, "f670": 29, "f6600": 29, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SGO_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_RIO_VERDE_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": 13, "f670": 21, "f6600": 21, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_COXIM_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": 23, "f670": 23, "f6600": 23, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SONORA_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": 13, "f670": 21, "f6600": 21, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_JARDIM_67", "vlan": 4021, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_GUIA_LOPES_67", "vlan": 4020, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_MIRANDA_67", "vlan": 4023, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CORUMBA_67", "vlan": 4025, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NOVA_CORUMBA_67", "vlan": 4030, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_LADÁRIO_67", "vlan": 4028, "f601": 13, "f670": 14, "f6600": 14, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_HOR_TOPNET", "vlan": 163, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 35 },
+  { "transmissor": "HWEI_GND_TOPNET", "vlan": 163, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 35 },
+  { "transmissor": "HWEI_SE_TOPNET", "vlan": 163, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 35 },
+  { "transmissor": "HWEI_CENTRAL_VIBE", "vlan": 202, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 34, "huaweiRoteada": 30 },
+  { "transmissor": "HWEI_CARIOCA_VIBE", "vlan": 202, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 34, "huaweiRoteada": 30 },
+  { "transmissor": "HWEI_ROCHEDO_VIBE", "vlan": 202, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 34, "huaweiRoteada": 30 },
+  { "transmissor": "HWEI_NOROESTE_VIBE", "vlan": 202, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 34, "huaweiRoteada": 30 },
+  { "transmissor": "HWEI_CORGUINHO_VIBE", "vlan": 202, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 34, "huaweiRoteada": 30 }
+],
+            "JP NET": [ { "transmissor": "ZTE_NASSER_WIFI", "vlan": 201, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CAIÇARA_67", "vlan": 201, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_TIJUCA_FLEXTEL", "vlan": 104, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STA_EMILIA_FLEXTEL", "vlan": 104, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_STA_EMILIA_FLEXTEL", "vlan": 104, "f601": 51, "f670": 51, "f6600": 51, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_INAPOLIS_FLEXTEL", "vlan": 201, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NCG_WIFI", "vlan": 104, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_NCG_WIFI", "vlan": 104, "f601": 51, "f670": 51, "f6600": 51, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_AEROPORTO_FLEXTEL", "vlan": 104, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_STO_AMARO_FLEXTEL", "vlan": 104, "f601": 43, "f670": 42, "f6600": 42, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_RITA_VIEIRA_CONNECT", "vlan": 104, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 41, "huaweiRoteada": 54 },
+  { "transmissor": "HWEI_DHAMMA_CONNECT", "vlan": 104, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 41, "huaweiRoteada": 54 },
+  { "transmissor": "HWEI_CAMPO_NOBRE_JPNET", "vlan": 100, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 52, "huaweiRoteada": 53 },
+  { "transmissor": "FHTT_JARAGUARI_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_BANDEIRANTES_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SGO_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_RIO_VERDE_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "FHTT_COXIM_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_SONORA_FLEXTEL", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_JARDIM_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_GUIA_LOPES_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_MIRANDA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_NOVA_CORUMBA_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "ZTE_LADÁRIO_67", "vlan": "SEM ATENDIMENTO", "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
+  { "transmissor": "HWEI_HOR_TOPNET", "vlan": 200, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 36 },
+  { "transmissor": "HWEI_GND_TOPNET", "vlan": 200, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 36 },
+  { "transmissor": "HWEI_SE_TOPNET", "vlan": 200, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 33, "huaweiRoteada": 36 },
+  { "transmissor": "HWEI_CENTRAL_VIBE", "vlan": 201, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 48, "huaweiRoteada": 50 },
+  { "transmissor": "HWEI_CARIOCA_VIBE", "vlan": 201, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 48, "huaweiRoteada": 50 },
+  { "transmissor": "ITBS_CAIOBA_VIBE", "vlan": 201, "f601": null, "f670": null, "f6600": null, "huaweiBridge": null, "huaweiRoteada": null },
+  { "transmissor": "ITBS_ROCHEDO_VIBE", "vlan": 201, "f601": null, "f670": null, "f6600": null, "huaweiBridge": null, "huaweiRoteada": null },
+  { "transmissor": "HWEI_ROCHEDO_VIBE", "vlan": 201, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 48, "huaweiRoteada": 50 },
+  { "transmissor": "HWEI_NOROESTE_VIBE", "vlan": 201, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 48, "huaweiRoteada": 50 },
+  { "transmissor": "HWEI_CORGUINHO_VIBE", "vlan": 201, "f601": "NÃO PERMITIDO", "f670": "NÃO PERMITIDO", "f6600": "NÃO PERMITIDO", "huaweiBridge": 48, "huaweiRoteada": 50 }
+]
+        };
+
+        let filtroFilial = '';
+
+        function filtrarPorFilial(filial) {
+            filtroFilial = filial;
+            pesquisar();
+        }
+
+        function limparFiltro() {
+            filtroFilial = '';
+            pesquisar();
+        }
+
+        function pesquisar() {
+            const termoBusca = document.getElementById("searchInput").value.toLowerCase();
+            const resultadosTbody = document.querySelector("#resultados tbody");
+            resultadosTbody.innerHTML = "";
+
+            let dadosFiltrados = filtroFilial ? dadosPorFilial[filtroFilial] || [] : [].concat(...Object.values(dadosPorFilial));
+
+            if (!termoBusca.trim() && !filtroFilial) {
+                resultadosTbody.innerHTML = "<tr><td colspan='7' style='text-align: center;'>Por favor, digite um termo de busca ou escolha um filtro de filial.</td></tr>";
+                return;
+            }
+
+            dadosFiltrados = dadosFiltrados.filter(item => {
+                return Object.values(item).some(value =>
+                    String(value).toLowerCase().includes(termoBusca)
+                );
+            });
+
+            if (dadosFiltrados.length === 0) {
+                resultadosTbody.innerHTML = "<tr><td colspan='7' style='text-align: center;'>Nenhum resultado encontrado.</td></tr>";
+                return;
+            }
+
+            dadosFiltrados.forEach(item => {
+                const tr = document.createElement("tr");
+
+                const tdTransmissor = document.createElement("td");
+                tdTransmissor.textContent = item.transmissor;
+                tr.appendChild(tdTransmissor);
+
+                const tdVlan = document.createElement("td");
+                tdVlan.textContent = item.vlan;
+                tr.appendChild(tdVlan);
+
+                const tdF601 = document.createElement("td");
+                tdF601.textContent = item.f601;
+                tr.appendChild(tdF601);
+
+                const tdF670 = document.createElement("td");
+                tdF670.textContent = item.f670;
+                tr.appendChild(tdF670);
+
+                const tdF6600 = document.createElement("td");
+                tdF6600.textContent = item.f6600;
+                tr.appendChild(tdF6600);
+
+                const tdHuaweiBridge = document.createElement("td");
+                tdHuaweiBridge.textContent = item.huaweiBridge;
+                tr.appendChild(tdHuaweiBridge);
+
+                const tdHuaweiRoteada = document.createElement("td");
+                tdHuaweiRoteada.textContent = item.huaweiRoteada;
+                tr.appendChild(tdHuaweiRoteada);
+
+                resultadosTbody.appendChild(tr);
+            });
+        }
+
+        // Alternar entre modo claro e escuro
+        function toggleMode() {
+            const body = document.body;
+            const button = document.getElementById("toggleModeButton");
+
+            body.classList.toggle("dark-mode");
+            if (body.classList.contains("dark-mode")) {
+                button.textContent = "Modo Claro";
+            } else {
+                button.textContent = "Modo Escuro";
+            }
+        }
+
+        // Adiciona o ouvinte de evento para chamar a função de pesquisa toda vez que o valor do input mudar
+        document.getElementById("searchInput").addEventListener("input", pesquisar);
+    </script>
+</body>
+</html>
