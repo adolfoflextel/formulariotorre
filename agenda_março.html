@@ -8,8 +8,10 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            color: #333;
             text-align: center;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
         .container {
             max-width: 600px;
@@ -18,6 +20,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, color 0.3s;
         }
         h2 {
             color: #333;
@@ -48,6 +51,23 @@
         a:hover {
             background: #0056b3;
         }
+        .dark-mode {
+            background-color: #1e1e1e;
+            color: #f4f4f4;
+        }
+        .dark-mode .container {
+            background: #333;
+            color: #f4f4f4;
+        }
+        .toggle-button {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+        }
     </style>
     <script>
         function filterLinks() {
@@ -63,10 +83,15 @@
                 }
             });
         }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
     </script>
 </head>
 <body>
     <div class="container">
+        <button class="toggle-button" onclick="toggleDarkMode()">Alternar Modo</button>
         <h2>Links de Acesso</h2>
         <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
         <ul>
