@@ -46,10 +46,15 @@
         .menu a:nth-child(3):hover { background: #b02a37; }
         .menu a:nth-child(4) { background: #ffc107; color: black; }
         .menu a:nth-child(4):hover { background: #d39e00; }
+        .menu a:nth-child(5) { background: #17a2b8; } /* Cor do novo botão */
+        .menu a:nth-child(5):hover { background: #117a8b; } 
+
         .dark-mode .menu a:nth-child(1) { background: #0056b3; }
         .dark-mode .menu a:nth-child(2) { background: #1e7e34; }
         .dark-mode .menu a:nth-child(3) { background: #b02a37; }
         .dark-mode .menu a:nth-child(4) { background: #d39e00; color: black; }
+        .dark-mode .menu a:nth-child(5) { background: #117a8b; }
+
         .toggle-button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -79,48 +84,23 @@
     <p>Escolha uma opção abaixo:</p>
     <button class="toggle-button" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
     <div class="menu">
-        <a href="formulario1.html">Registro de Atendimento</a>
-        <a href="formulario2.html">Pós Atendimento</a>
-        <a href="formulario3.html">AGENDAS</a>
-        <a href="formulario4.html">RELAÇÃO OLT</a>
-        
+        <a href="FORMULÁRIO_AUTORIZAÇÃO.html">Registro de Atendimento</a>
+        <a href="pos_atendimento.html">Pós Atendimento</a>
+        <a href="agenda_março.html">AGENDAS</a>
+        <a href="EXCEL2.html">RELAÇÃO OLT</a>
+        <a href="conferencia.html">CONFERÊNCIA</a> <!-- Novo botão adicionado -->
     </div>
     
     <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-        }
-
+        // Aplicar o tema escuro ao carregar a página
         if (localStorage.getItem("darkMode") === "true") {
             document.body.classList.add("dark-mode");
         }
 
-        // Função para redirecionamento via JavaScript
-        function goToPage(page) {
-            window.location.href = page;
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
         }
-
-        // Seleciona todos os links do menu
-        const links = document.querySelectorAll('.menu a');
-
-        // Mapeia os links para os respectivos arquivos corretos
-        const pages = [
-            'FORMULÁRIO_AUTORIZAÇÃO.html', 
-            'pos_atentimento.html', 
-            'agenda_março.html', 
-            'EXCEL2.html'
-            
-        ];
-
-        // Adicionando evento de clique dinamicamente
-        links.forEach((link, index) => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                goToPage(pages[index]);
-            });
-        });
-
     </script>
 </body>
 </html>
