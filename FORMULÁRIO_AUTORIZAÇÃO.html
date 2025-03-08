@@ -153,5 +153,78 @@
 
         criarFormularios();
     </script>
+
+<script>
+    async function atualizarJSON(novoFormulario) {
+        const token = "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"; // Substitua pelo seu token
+        const usuario = "adolfoflextel"; // Seu nome de usuário no GitHub
+        const repositorio = "formulariotorre"; // Nome do repositório
+        const arquivoPath = "data/formularios.json"; // Caminho do JSON no repositório
+        const apiUrl = `https://api.github.com/repos/${usuario}/${repositorio}/contents/${arquivoPath}`;
+
+        try {
+            // Primeiro, obter o conteúdo atual do JSON
+            let response = await fetch(apiUrl, {
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Erro ao acessar o JSON");
+
+            let data = await response.json();
+            let content = JSON.parse(atob(data.content)); // Decodifica o JSON atual
+
+            // Adiciona o novo formulário à lista
+            content.push(novoFormulario);
+
+            // Converte novamente para Base64
+            let updatedContent = btoa(JSON.stringify(content, null, 2));
+
+            // Envia a atualização para o GitHub
+            let updateResponse = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    message: "Novo formulário adicionado",
+                    content: updatedContent,
+                    sha: data.sha // Necessário para editar o arquivo
+                })
+            });
+
+            if (updateResponse.ok) {
+                alert("Formulário salvo com sucesso!");
+            } else {
+                console.error("Erro ao atualizar JSON", await updateResponse.text());
+            }
+        } catch (error) {
+            console.error("Erro ao acessar o GitHub:", error);
+        }
+    }
+
+    function gerarFormulario() {
+        let data = new Date().toISOString().split('T')[0];
+        let agente = "Michael"; // Pegue do formulário
+        let tecnico = "Anderson"; // Pegue do formulário
+        let arquivo = `arquivos/atendimento_${data}.txt`;
+
+        let novoFormulario = {
+            "data": data,
+            "agente": agente,
+            "tecnico": tecnico,
+            "arquivo": arquivo,
+            "status": "Pendente"
+        };
+
+        atualizarJSON(novoFormulario);
+    }
+</script>
+<button onclick="gerarFormulario()">Adicionar ao JSON</button>
+
+    
 </body>
 </html>
