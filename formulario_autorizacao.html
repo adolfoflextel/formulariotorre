@@ -101,13 +101,16 @@
         }
 
         function exibirFormulario() {
+            const tipoSelecionado = document.getElementById("tipo_atendimento").value;
+            if (!tipoSelecionado) return; // Se não houver tipo selecionado, nada será exibido.
+            
+            // Esconder todos os formulários
             tipos.forEach(tipo => {
                 document.getElementById(`${tipo}_container`).style.display = "none";
             });
-            const tipoSelecionado = document.getElementById("tipo_atendimento").value;
-            if (tipoSelecionado) {
-                document.getElementById(`${tipoSelecionado}_container`).style.display = "block";
-            }
+            
+            // Exibir o formulário correspondente ao tipo selecionado
+            document.getElementById(`${tipoSelecionado}_container`).style.display = "block";
             definirDataAtual();
         }
 
