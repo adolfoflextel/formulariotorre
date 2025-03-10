@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body onload="definirDataAtual()" class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+<body onload="criarFormularios()" class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <div class="max-w-xl mx-auto p-6">
         <h2 class="text-2xl font-semibold text-center mb-4">Registro de Atendimento</h2>
         <button class="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
@@ -68,15 +68,18 @@
             const container = document.getElementById("formularios");
             const select = document.getElementById("tipo_atendimento");
 
+            // Criar as opções do select
             tipos.forEach(tipo => {
                 const option = document.createElement("option");
                 option.value = tipo;
                 option.textContent = tipo.replace("_", " ").toUpperCase();
                 select.appendChild(option);
 
+                // Criar o formulário correspondente para cada tipo
                 const form = document.createElement("div");
                 form.className = "form-container p-4 border border-gray-300 rounded bg-white dark:bg-gray-800 dark:border-gray-600";
                 form.id = `${tipo}_container`;
+                form.style.display = "none"; // Inicialmente oculto
                 form.innerHTML = `
                     <h3 class="text-xl font-semibold mb-4">${tipo.replace("_", " ").toUpperCase()}</h3>
                     <form id="${tipo}_form">${gerarCampos(tipo)}
@@ -103,12 +106,12 @@
         function exibirFormulario() {
             const tipoSelecionado = document.getElementById("tipo_atendimento").value;
             if (!tipoSelecionado) return; // Se não houver tipo selecionado, nada será exibido.
-            
+
             // Esconder todos os formulários
             tipos.forEach(tipo => {
                 document.getElementById(`${tipo}_container`).style.display = "none";
             });
-            
+
             // Exibir o formulário correspondente ao tipo selecionado
             document.getElementById(`${tipoSelecionado}_container`).style.display = "block";
             definirDataAtual();
@@ -157,7 +160,6 @@
             setTimeout(() => msg.style.display = "none", 3000);
         }
 
-        criarFormularios();
     </script>
 </body>
 </html>
