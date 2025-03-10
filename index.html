@@ -77,6 +77,7 @@
         <button onclick="loadContent('home')">Home</button>
         <button onclick="loadContent('sobre')">Sobre</button>
         <button onclick="loadContent('contato')">Contato</button>
+        <button onclick="loadContent('FORMULÁRIO_AUTORIZACAO')">Formulário</button>
     </div>
 
     <!-- Conteúdo da página -->
@@ -98,6 +99,13 @@
                 .then(data => {
                     // Coloca o conteúdo do arquivo HTML dentro da div #content-area
                     document.getElementById('content-area').innerHTML = data;
+
+                    // Se for o formulário, carrega os scripts necessários
+                    if (page === 'FORMULÁRIO_AUTORIZACAO') {
+                        const script = document.createElement('script');
+                        script.src = 'FORMULÁRIO_AUTORIZACAO.js'; // Assume that the script is extracted to a separate file
+                        document.getElementById('content-area').appendChild(script);
+                    }
                 })
                 .catch(error => {
                     document.getElementById('content-area').innerHTML = `<p>Erro ao carregar o conteúdo: ${error.message}</p>`;
