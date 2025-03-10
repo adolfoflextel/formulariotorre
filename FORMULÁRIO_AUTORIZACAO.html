@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -23,16 +24,12 @@
 <body onload="definirDataAtual()">
     <h2>Registro de Atendimento</h2>
     <button onclick="toggleDarkMode()">Alternar Modo Escuro</button>
-    <label for="servicos">Selecione um serviço:</label>
-<select id="servicos">
-    <option value="">Selecione</option>
-    <option value="instalacao">Instalação</option>
-    <option value="manutencao">Manutenção</option>
-    <option value="suporte">Suporte Técnico</option>
-</select>
-
-<p id="resultado"></p> <!-- Onde será exibido o serviço selecionado -->
-
+    <label for="tipo_atendimento">Tipo de Atendimento:</label>
+    <select id="tipo_atendimento" onchange="exibirFormulario()">
+        <option value="">Selecione...</option>
+    </select>
+    <div id="formularios"></div>
+    <div id="mensagem" class="message"></div>
 
     <script>
         const tipos = ["mudança_de endereço", "instalação", "troca_equipamento", "troca_onu"];
@@ -157,5 +154,9 @@
 
         criarFormularios();
     </script>
+
+
+
+    
 </body>
 </html>
