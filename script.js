@@ -19,3 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+ document.getElementById("servicos").addEventListener("change", function () {
+        let resultado = document.getElementById("resultado");
+        resultado.textContent = "Serviço selecionado: " + this.value;
+    });
