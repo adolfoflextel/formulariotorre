@@ -4,16 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     menuLinks.forEach(link => {
         link.addEventListener("click", function (event) {
-            event.preventDefault(); // Evita o comportamento padrão do link
+            event.preventDefault(); 
             const page = this.getAttribute("data-page");
 
             fetch(page)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Erro ao carregar a página.");
-                    }
-                    return response.text();
-                })
+                .then(response => response.text())
                 .then(html => {
                     contentDiv.innerHTML = html;
                 })
