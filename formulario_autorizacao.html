@@ -28,11 +28,11 @@
     <!-- Menu lateral -->
     <div id="slideMenu" class="fixed top-0 left-[-250px] w-[250px] h-full bg-gray-800 text-white p-5 transition-all duration-300 z-40">
         <button onclick="toggleMenu()" class="mb-4 text-xl">✖ Fechar</button>
-        <a href="#" class="block p-2" onclick="navigate('formulario_registro.html')">📄 Registro de Atendimento</a>
-        <a href="#" class="block p-2" onclick="navigate('pos_atendimento.html')">📝 Pós Atendimento</a>
-        <a href="#" class="block p-2" onclick="navigate('agenda_março.html')">📅 Agendas</a>
-        <a href="#" class="block p-2" onclick="navigate('EXCEL2.html')">🖥 Relação OLT</a>
-        <a href="#" class="block p-2" onclick="navigate('conferencia.html')">✅ Conferência</a>
+        <a href="#" class="block p-2" onclick="navigate('formulario_registro')">📄 Registro de Atendimento</a>
+        <a href="#" class="block p-2" onclick="navigate('pos_atendimento')">📝 Pós Atendimento</a>
+        <a href="#" class="block p-2" onclick="navigate('agenda_marco')">📅 Agendas</a>
+        <a href="#" class="block p-2" onclick="navigate('relacao_olt')">🖥 Relação OLT</a>
+        <a href="#" class="block p-2" onclick="navigate('conferencia')">✅ Conferência</a>
     </div>
 
     <!-- Cabeçalho -->
@@ -56,36 +56,27 @@
             menu.style.left = currentLeft;
         }
 
-        // Carregar conteúdo externo sem recarregar a página
+        // Navegar entre páginas no menu
         function navigate(page) {
-            fetch(page)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("content").innerHTML = html;
-                    toggleMenu(); // Fecha o menu após clicar
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar a página:", error);
-                    document.getElementById("content").innerHTML = "<h1 class='text-2xl font-bold'>Erro 404</h1><p>Página não encontrada.</p>";
-                });
+            if (page === 'formulario_registro') {
+                exibirFormularioRegistro();
+            }
+            toggleMenu(); // Fecha o menu após clicar
         }
 
-        // Alternar Modo Escuro
-        if (localStorage.getItem("darkMode") === "true") {
-            document.body.classList.add("bg-gray-900", "text-white");
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("bg-gray-900");
-            document.body.classList.toggle("text-white");
-            localStorage.setItem("darkMode", document.body.classList.contains("bg-gray-900"));
-        }
-
-        // Definir data atual
-        function definirDataAtual() {
-            document.querySelectorAll("input[type='date']").forEach(input => {
-                input.value = new Date().toISOString().split('T')[0];
-            });
+        // Exibir formulário de registro
+        function exibirFormularioRegistro() {
+            const content = document.getElementById("content");
+            content.innerHTML = `
+                <h2>Registro de Atendimento</h2>
+                <label for="tipo_atendimento">Tipo de Atendimento:</label>
+                <select id="tipo_atendimento" onchange="exibirFormulario()">
+                    <option value="">Selecione...</option>
+                </select>
+                <div id="formularios"></div>
+                <div id="mensagem" class="message"></div>
+            `;
+            criarFormularios();
         }
 
         const tipos = ["mudança_de_endereço", "instalação", "troca_equipamento", "troca_onu"];
@@ -105,18 +96,27 @@
         ];
 
         function criarFormularios() {
-            const container = document.getElementById("content");
+            const container = document.getElementById("formularios");
+            const select = document.getElementById("tipo_atendimento");
+
             tipos.forEach(tipo => {
+                const option = document.createElement("option");
+                option.value = tipo;
+                option.textContent = tipo.replace("_", " ").toUpperCase();
+                select.appendChild(option);
+
                 const form = document.createElement("div");
                 form.className = "form-container";
                 form.id = `${tipo}_container`;
-                form.innerHTML = `<h3>${tipo.replace("_", " ").toUpperCase()}</h3>
+                form.innerHTML = `
+                    <h3>${tipo.replace("_", " ").toUpperCase()}</h3>
                     <form id="${tipo}_form">${gerarCampos(tipo)}
                         <button type="button" class="generate" onclick="gerarTexto('${tipo}')">Gerar Texto 📄</button>
                         <button type="button" class="copy" onclick="copiarTexto('${tipo}')">Copiar Texto 📋</button>
                         <button type="button" class="clear" onclick="limparCampos('${tipo}')">Limpar Campos ❌</button>
                         <pre id="${tipo}_resultado"></pre>
-                    </form>`;
+                    </form>
+                `;
                 container.appendChild(form);
             });
 
@@ -129,6 +129,32 @@
             ).join('');
         }
 
+        function exibirFormulario() {
+            tipos.forEach(tipo => {
+                document.getElementById(`${tipo}_container`).style.display = "none";
+            });
+            const tipoSelecionado = document.getElementById("tipo_atendimento").value;
+            if (tipoSelecionado) {
+                document.getElementById(`${tipoSelecionado}_container`).style.display = "block";
+            }
+            definirDataAtual();
+        }
+
+        // Função de alternar modo escuro
+        function toggleDarkMode() {
+            document.body.classList.toggle("bg-gray-900");
+            document.body.classList.toggle("text-white");
+            localStorage.setItem("darkMode", document.body.classList.contains("bg-gray-900"));
+        }
+
+        // Definir data atual
+        function definirDataAtual() {
+            document.querySelectorAll("input[type='date']").forEach(input => {
+                input.value = new Date().toISOString().split('T')[0];
+            });
+        }
+
+        // Função para gerar o texto
         function gerarTexto(tipo) {
             let texto = `${tipo.replace("_", " ").toUpperCase()}\n`;
             campos.forEach(({ id, label }) => {
@@ -145,6 +171,7 @@
             a.click();
         }
 
+        // Função para copiar o texto gerado
         function copiarTexto(tipo) {
             const texto = document.getElementById(`${tipo}_resultado`).textContent;
             navigator.clipboard.writeText(texto).then(() => {
@@ -154,6 +181,7 @@
             });
         }
 
+        // Função para limpar os campos
         function limparCampos(tipo) {
             campos.forEach(({ id }) => {
                 const campo = document.getElementById(`${tipo}_${id}`);
@@ -164,6 +192,7 @@
             document.getElementById(`${tipo}_resultado`).textContent = '';
         }
 
+        // Função para mostrar mensagens
         function mostrarMensagem(texto, cor) {
             const msg = document.getElementById("mensagem");
             msg.textContent = texto;
@@ -171,8 +200,6 @@
             msg.style.display = "block";
             setTimeout(() => msg.style.display = "none", 3000);
         }
-
-        criarFormularios();
     </script>
 </body>
 </html>
