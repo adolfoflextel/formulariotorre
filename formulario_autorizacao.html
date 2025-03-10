@@ -1,15 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário de Registro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; background-color: #f4f4f4; color: #333; transition: background 0.3s, color 0.3s; }
         h2 { text-align: center; }
         .dark-mode h2 { color: #f4f4f4; }
-        .form-container { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+        .form-container { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; display: none; background: white; }
         label { display: flex; flex-direction: column; font-weight: bold; margin-top: 5px; }
         input { width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ccc; border-radius: 4px; }
         button { margin-top: 10px; padding: 10px; cursor: pointer; width: 100%; border: none; border-radius: 5px; }
@@ -22,64 +22,17 @@
     </style>
 </head>
 <body onload="definirDataAtual()">
-    <!-- Botão para abrir o menu -->
-    <button onclick="toggleMenu()" class="p-4 text-white bg-blue-600 fixed top-4 left-4 z-50">☰ Menu</button>
-
-    <!-- Menu lateral -->
-    <div id="slideMenu" class="fixed top-0 left-[-250px] w-[250px] h-full bg-gray-800 text-white p-5 transition-all duration-300 z-40">
-        <button onclick="toggleMenu()" class="mb-4 text-xl">✖ Fechar</button>
-        <a href="#" class="block p-2" onclick="navigate('formulario_registro')">📄 Registro de Atendimento</a>
-        <a href="#" class="block p-2" onclick="navigate('pos_atendimento')">📝 Pós Atendimento</a>
-        <a href="#" class="block p-2" onclick="navigate('agenda_marco')">📅 Agendas</a>
-        <a href="#" class="block p-2" onclick="navigate('relacao_olt')">🖥 Relação OLT</a>
-        <a href="#" class="block p-2" onclick="navigate('conferencia')">✅ Conferência</a>
-    </div>
-
-    <!-- Cabeçalho -->
-    <div class="text-center p-6">
-        <img src="logo.png" alt="Logo da Empresa" class="w-24 mx-auto">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bem-vindo à TORRE</h1>
-        <p class="text-gray-700 dark:text-gray-300">Escolha uma opção no menu:</p>
-        <button class="toggle-button mt-4 p-2 bg-gray-800 text-white rounded" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
-    </div>
-
-    <!-- Área onde o conteúdo muda -->
-    <div id="content" class="p-10">
-        <p>Selecione uma opção no menu para visualizar o conteúdo.</p>
-    </div>
+    <h2>Registro de Atendimento</h2>
+    <button onclick="toggleDarkMode()">Alternar Modo Escuro</button>
+    <label for="tipo_atendimento">Tipo de Atendimento:</label>
+    <select id="tipo_atendimento" onchange="exibirFormulario()">
+        <option value="">Selecione...</option>
+    </select>
+    <div id="formularios"></div>
+    <div id="mensagem" class="message"></div>
 
     <script>
-        // Alternar menu lateral
-        function toggleMenu() {
-            const menu = document.getElementById("slideMenu");
-            const currentLeft = menu.style.left === "0px" ? "-250px" : "0px";
-            menu.style.left = currentLeft;
-        }
-
-        // Navegar entre páginas no menu
-        function navigate(page) {
-            if (page === 'formulario_registro') {
-                exibirFormularioRegistro();
-            }
-            toggleMenu(); // Fecha o menu após clicar
-        }
-
-        // Exibir formulário de registro
-        function exibirFormularioRegistro() {
-            const content = document.getElementById("content");
-            content.innerHTML = `
-                <h2>Registro de Atendimento</h2>
-                <label for="tipo_atendimento">Tipo de Atendimento:</label>
-                <select id="tipo_atendimento" onchange="exibirFormulario()">
-                    <option value="">Selecione...</option>
-                </select>
-                <div id="formularios"></div>
-                <div id="mensagem" class="message"></div>
-            `;
-            criarFormularios();
-        }
-
-        const tipos = ["mudança_de_endereço", "instalação", "troca_equipamento", "troca_onu"];
+        const tipos = ["mudança_de endereço", "instalação", "troca_equipamento", "troca_onu"];
         const campos = [
             { id: "data", label: "Data", type: "date" },
             { id: "agente", label: "Agente", type: "text" },
@@ -95,6 +48,23 @@
             { id: "protocolo", label: "Protocolo", type: "text" }
         ];
 
+        function definirDataAtual() {
+            document.querySelectorAll("input[type='date']").forEach(input => {
+                input.value = new Date().toISOString().split('T')[0];
+            });
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+        }
+
+        function carregarModoEscuro() {
+            if (localStorage.getItem("darkMode") === "true") {
+                document.body.classList.add("dark-mode");
+            }
+        }
+
         function criarFormularios() {
             const container = document.getElementById("formularios");
             const select = document.getElementById("tipo_atendimento");
@@ -108,19 +78,18 @@
                 const form = document.createElement("div");
                 form.className = "form-container";
                 form.id = `${tipo}_container`;
-                form.innerHTML = `
-                    <h3>${tipo.replace("_", " ").toUpperCase()}</h3>
+                form.innerHTML = `<h3>${tipo.replace("_", " ").toUpperCase()}</h3>
                     <form id="${tipo}_form">${gerarCampos(tipo)}
                         <button type="button" class="generate" onclick="gerarTexto('${tipo}')">Gerar Texto 📄</button>
                         <button type="button" class="copy" onclick="copiarTexto('${tipo}')">Copiar Texto 📋</button>
                         <button type="button" class="clear" onclick="limparCampos('${tipo}')">Limpar Campos ❌</button>
                         <pre id="${tipo}_resultado"></pre>
-                    </form>
-                `;
+                    </form>`;
                 container.appendChild(form);
             });
 
             definirDataAtual();
+            carregarModoEscuro();
         }
 
         function gerarCampos(tipo) {
@@ -140,21 +109,6 @@
             definirDataAtual();
         }
 
-        // Função de alternar modo escuro
-        function toggleDarkMode() {
-            document.body.classList.toggle("bg-gray-900");
-            document.body.classList.toggle("text-white");
-            localStorage.setItem("darkMode", document.body.classList.contains("bg-gray-900"));
-        }
-
-        // Definir data atual
-        function definirDataAtual() {
-            document.querySelectorAll("input[type='date']").forEach(input => {
-                input.value = new Date().toISOString().split('T')[0];
-            });
-        }
-
-        // Função para gerar o texto
         function gerarTexto(tipo) {
             let texto = `${tipo.replace("_", " ").toUpperCase()}\n`;
             campos.forEach(({ id, label }) => {
@@ -171,7 +125,6 @@
             a.click();
         }
 
-        // Função para copiar o texto gerado
         function copiarTexto(tipo) {
             const texto = document.getElementById(`${tipo}_resultado`).textContent;
             navigator.clipboard.writeText(texto).then(() => {
@@ -181,7 +134,6 @@
             });
         }
 
-        // Função para limpar os campos
         function limparCampos(tipo) {
             campos.forEach(({ id }) => {
                 const campo = document.getElementById(`${tipo}_${id}`);
@@ -192,7 +144,6 @@
             document.getElementById(`${tipo}_resultado`).textContent = '';
         }
 
-        // Função para mostrar mensagens
         function mostrarMensagem(texto, cor) {
             const msg = document.getElementById("mensagem");
             msg.textContent = texto;
@@ -200,6 +151,8 @@
             msg.style.display = "block";
             setTimeout(() => msg.style.display = "none", 3000);
         }
+
+        criarFormularios();
     </script>
 </body>
 </html>
