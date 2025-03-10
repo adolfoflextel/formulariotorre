@@ -4,34 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário de Registro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; background-color: #f4f4f4; color: #333; transition: background 0.3s, color 0.3s; }
-        h2 { text-align: center; }
-        .dark-mode h2 { color: #f4f4f4; }
-        .form-container { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; display: none; background: white; }
-        label { display: flex; flex-direction: column; font-weight: bold; margin-top: 5px; }
-        input { width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ccc; border-radius: 4px; }
-        button { margin-top: 10px; padding: 10px; cursor: pointer; width: 100%; border: none; border-radius: 5px; }
-        .generate { background-color: #28a745; color: white; }
-        .copy { background-color: #007bff; color: white; }
-        .clear { background-color: #dc3545; color: white; }
-        .dark-mode { background-color: #333; color: #f4f4f4; }
-        .dark-mode .form-container { background: #444; border-color: #666; }
-        .message { text-align: center; font-weight: bold; margin-top: 10px; display: none; }
+        .dark-mode {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+        .dark-mode .form-container {
+            background: #444;
+            border-color: #666;
+        }
     </style>
 </head>
-<body onload="definirDataAtual()">
-    <h2>Registro de Atendimento</h2>
-    <button onclick="toggleDarkMode()">Alternar Modo Escuro</button>
-    <label for="tipo_atendimento">Tipo de Atendimento:</label>
-    <select id="tipo_atendimento" onchange="exibirFormulario()">
-        <option value="">Selecione...</option>
-    </select>
-    <div id="formularios"></div>
-    <div id="mensagem" class="message"></div>
+<body onload="definirDataAtual()" class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <div class="max-w-xl mx-auto p-6">
+        <h2 class="text-2xl font-semibold text-center mb-4">Registro de Atendimento</h2>
+        <button class="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
+
+        <label for="tipo_atendimento" class="block font-semibold mb-2">Tipo de Atendimento:</label>
+        <select id="tipo_atendimento" onchange="exibirFormulario()" class="w-full p-2 border border-gray-300 rounded mb-6">
+            <option value="">Selecione...</option>
+        </select>
+
+        <div id="formularios"></div>
+        <div id="mensagem" class="text-center font-bold mt-4 hidden"></div>
+    </div>
 
     <script>
-        const tipos = ["mudança_de endereço", "instalação", "troca_equipamento", "troca_onu"];
+        const tipos = ["mudança_de_endereco", "instalação", "troca_equipamento", "troca_onu"];
         const campos = [
             { id: "data", label: "Data", type: "date" },
             { id: "agente", label: "Agente", type: "text" },
@@ -75,14 +75,15 @@
                 select.appendChild(option);
 
                 const form = document.createElement("div");
-                form.className = "form-container";
+                form.className = "form-container p-4 border border-gray-300 rounded bg-white dark:bg-gray-800 dark:border-gray-600";
                 form.id = `${tipo}_container`;
-                form.innerHTML = `<h3>${tipo.replace("_", " ").toUpperCase()}</h3>
+                form.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-4">${tipo.replace("_", " ").toUpperCase()}</h3>
                     <form id="${tipo}_form">${gerarCampos(tipo)}
-                        <button type="button" class="generate" onclick="gerarTexto('${tipo}')">Gerar Texto 📄</button>
-                        <button type="button" class="copy" onclick="copiarTexto('${tipo}')">Copiar Texto 📋</button>
-                        <button type="button" class="clear" onclick="limparCampos('${tipo}')">Limpar Campos ❌</button>
-                        <pre id="${tipo}_resultado"></pre>
+                        <button type="button" class="generate py-2 px-4 bg-green-500 text-white rounded w-full mb-4" onclick="gerarTexto('${tipo}')">Gerar Texto 📄</button>
+                        <button type="button" class="copy py-2 px-4 bg-blue-500 text-white rounded w-full mb-4" onclick="copiarTexto('${tipo}')">Copiar Texto 📋</button>
+                        <button type="button" class="clear py-2 px-4 bg-red-500 text-white rounded w-full mb-4" onclick="limparCampos('${tipo}')">Limpar Campos ❌</button>
+                        <pre id="${tipo}_resultado" class="whitespace-pre-wrap"></pre>
                     </form>`;
                 container.appendChild(form);
             });
@@ -93,7 +94,9 @@
 
         function gerarCampos(tipo) {
             return campos.map(campo =>
-                `<label>${campo.label}: <input type="${campo.type}" id="${tipo}_${campo.id}" value="${campo.default || ''}"></label>`
+                `<label class="block mb-2">${campo.label}: 
+                    <input type="${campo.type}" id="${tipo}_${campo.id}" value="${campo.default || ''}" class="w-full p-2 border border-gray-300 rounded mt-2">
+                </label>`
             ).join('');
         }
 
@@ -153,9 +156,5 @@
 
         criarFormularios();
     </script>
-
-
-
-    
 </body>
 </html>
