@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.dark-mode {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+h1 {
+    color: #333;
+}
+
+.dark-mode h1 {
+    color: #f4f4f4;
+}
+
+.menu {
+    margin-top: 20px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu a {
+    display: block;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+}
+
+.menu a:nth-child(1) { background: #007bff; }
+.menu a:nth-child(1):hover { background: #0056b3; }
+.menu a:nth-child(2) { background: #28a745; }
+.menu a:nth-child(2):hover { background: #1e7e34; }
+.menu a:nth-child(3) { background: #dc3545; }
+.menu a:nth-child(3):hover { background: #b02a37; }
+.menu a:nth-child(4) { background: #ffc107; color: black; }
+.menu a:nth-child(4):hover { background: #d39e00; }
+.menu a:nth-child(5) { background: #17a2b8; }
+.menu a:nth-child(5):hover { background: #117a8b; }
+
+.dark-mode .menu a:nth-child(1) { background: #0056b3; }
+.dark-mode .menu a:nth-child(2) { background: #1e7e34; }
+.dark-mode .menu a:nth-child(3) { background: #b02a37; }
+.dark-mode .menu a:nth-child(4) { background: #d39e00; color: black; }
+.dark-mode .menu a:nth-child(5) { background: #117a8b; }
+
+.toggle-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #222;
+    color: white;
+}
+
+.dark-mode .toggle-button {
+    background: #f4f4f4;
+    color: #222;
+}
+
+.header img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+}
