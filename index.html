@@ -1,97 +1,105 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pós Atendimento - Menu</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #ffffff;
-            padding: 20px;
-            transition: background 0.3s, color 0.3s;
-        }
-        .dark-mode {
-            background-color: #333;
-            color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
-        .dark-mode h1 {
-            color: #f4f4f4;
-        }
-        .menu {
-            margin-top: 20px;
-        }
-        .menu a {
-            display: block;
-            text-decoration: none;
-            font-size: 20px;
-            margin: 10px;
-            padding: 15px;
-            border-radius: 5px;
-            width: 250px;
-            margin-left: auto;
-            margin-right: auto;
-            color: white;
-            text-align: center;
-        }
-        .menu a:nth-child(1) { background: #007bff; }
-        .menu a:nth-child(1):hover { background: #0056b3; }
-        .menu a:nth-child(2) { background: #28a745; }
-        .menu a:nth-child(2):hover { background: #1e7e34; }
-        .menu a:nth-child(3) { background: #dc3545; }
-        .menu a:nth-child(3):hover { background: #b02a37; }
-        .menu a:nth-child(4) { background: #ffc107; } /* Cor do quarto botão */
-        .menu a:nth-child(4):hover { background: #e0a800; } /* Hover do quarto botão */
-        .dark-mode .menu a:nth-child(1) { background: #0056b3; }
-        .dark-mode .menu a:nth-child(2) { background: #1e7e34; }
-        .dark-mode .menu a:nth-child(3) { background: #b02a37; }
-        .dark-mode .menu a:nth-child(4) { background: #e0a800; } /* Cor no modo escuro */
-        .toggle-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background: #222;
-            color: white;
-        }
-        .dark-mode .toggle-button {
-            background: #f4f4f4;
-            color: #222;
-        }
-        .header img {
-            width: 100px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pós Atendimento - Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background-color: #333;
+      color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    .dark-mode h1 {
+      color: #f4f4f4;
+    }
+    .menu {
+      margin-top: 20px;
+    }
+    .menu a {
+      display: block;
+      text-decoration: none;
+      font-size: 20px;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      width: 250px;
+      margin-left: auto;
+      margin-right: auto;
+      color: white;
+      text-align: center;
+    }
+    .menu a:nth-child(1) { background: #007bff; }
+    .menu a:nth-child(1):hover { background: #0056b3; }
+    .menu a:nth-child(2) { background: #28a745; }
+    .menu a:nth-child(2):hover { background: #1e7e34; }
+    .menu a:nth-child(3) { background: #dc3545; }
+    .menu a:nth-child(3):hover { background: #b02a37; }
+    .menu a:nth-child(4) { background: #ffc107; }
+    .menu a:nth-child(4):hover { background: #e0a800; }
+    .menu a:nth-child(5) { background: #6f42c1; }  /* Cor para o quinto botão */
+    .menu a:nth-child(5):hover { background: #5936a6; }
+
+    .dark-mode .menu a:nth-child(1) { background: #0056b3; }
+    .dark-mode .menu a:nth-child(2) { background: #1e7e34; }
+    .dark-mode .menu a:nth-child(3) { background: #b02a37; }
+    .dark-mode .menu a:nth-child(4) { background: #e0a800; }
+    .dark-mode .menu a:nth-child(5) { background: #5936a6; } /* Cor modo escuro */
+    .dark-mode .menu a:nth-child(5):hover { background: #452d87; }
+
+    .toggle-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: white;
+    }
+    .dark-mode .toggle-button {
+      background: #f4f4f4;
+      color: #222;
+    }
+    .header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
- 
-    <h1>Bem-vindo à TORRE</h1>
-    <p>Escolha uma opção abaixo:</p>
-    <button class="toggle-button" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
-    <div class="menu">
-        <a href="FORMULÁRIO_AUTORIZACAO.html">Registro de Atendimento</a>
-        <a href="REGISTRO_POS.html">Pós Atendimento </a>
-        <a href="relacaoolt.html">RELAÇÃO OLT</a>
-        <a href="agenda_marco.html">AGENDA</a>
-        <a href="novo_menu.html">Novo Menu</a> <!-- Novo botão adicionado -->
-    </div>
-    <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-        }
-        
-        if (localStorage.getItem("darkMode") === "true") {
-            document.body.classList.add("dark-mode");
-        }
-    </script>
+
+  <h1>Bem-vindo à TORRE</h1>
+  <p>Escolha uma opção abaixo:</p>
+  <button class="toggle-button" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
+
+  <div class="menu">
+    <a href="FORMULÁRIO_AUTORIZACAO.html" target="_blank">Registro de Atendimento</a>
+    <a href="REGISTRO_POS.html" target="_blank">Pós Atendimento</a>
+    <a href="relacaoolt.html" target="_blank">RELAÇÃO OLT</a>
+    <a href="agenda_marco.html" target="_blank">AGENDA</a>
+    <a href="novo_menu.html" target="_blank">Novo Menu</a> <!-- Cor adicionada -->
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+    }
+
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark-mode");
+    }
+  </script>
 </body>
 </html>
