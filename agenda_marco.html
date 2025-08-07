@@ -1,140 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Links de Acesso</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      transition: background-color 0.3s, color 0.3s;
-      padding: 20px;
-    }
-
-    .light-mode {
-      background-color: #f4f4f4;
-      color: #333;
-    }
-
-    .dark-mode {
-      background-color: #1e1e1e;
-      color: #f1f1f1;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: inherit;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      margin-bottom: 15px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .dark-mode input {
-      background-color: #333;
-      color: #f1f1f1;
-      border: 1px solid #555;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      margin: 10px 0;
-    }
-
-    a {
-      display: block;
-      padding: 10px;
-      background: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.3s;
-    }
-
-    a:hover {
-      background: #0056b3;
-    }
-
-    .theme-toggle {
-      margin-bottom: 15px;
-      padding: 8px 16px;
-      border: none;
-      background: #444;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .light-mode .theme-toggle {
-      background: #ddd;
-      color: #333;
-    }
-
-    .light-mode .theme-toggle:hover {
-      background: #ccc;
-    }
-
-    .dark-mode .theme-toggle:hover {
-      background: #666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links de Acesso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            display: block;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        a:hover {
+            background: #0056b3;
+        }
+    </style>
+    <script>
+        function filterLinks() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let links = document.querySelectorAll('ul li');
+            
+            links.forEach(link => {
+                let text = link.textContent.toLowerCase();
+                if (text.includes(input)) {
+                    link.style.display = '';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </head>
-<body class="light-mode">
-  <div class="container">
-    <button class="theme-toggle" onclick="toggleTheme()">Alternar Tema</button>
-    <h2>Links de Acesso</h2>
-    <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
-    <ul>
-      <li><a href="https://docs.google.com/spreadsheets/d/1uAzD2EEaGq-4JTwpvBiWn37DyOwqDBAQ0fEHdTiHYXg/edit?usp=drive_link" target="_blank">Conexão67 Campo Grande</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1GpgTcSUgP6U4iQXxBqAq1P_LUD2-bK7uHri1ZysI4VE/edit?usp=drive_link" target="_blank">Conexão67 Rochedo e Corguinho</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/15Pe6aQUfPdQnfFNaWc_13_V7k-avQRiWkw7TygTrKrk/edit?usp=drive_link" target="_blank">Connect</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1Ev3ddLFINI8QiPTVx2OsmV2dQOn3i0nx3ZE7SQFLGh8/edit?usp=drive_link" target="_blank">Flextel Alcinópolis</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1g7f_BaQiRew6elyPP7eIq6BZ6fGWEfnmsOLLyj7jZyU/edit?usp=drive_link" target="_blank">Flextel Bandeirantes</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1g53Hg3zWsOSu2jJysYXYXsL1L3IY4u6D6WNA859E3YM/edit?usp=drive_link" target="_blank">Flextel Campo Grande</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1jlqlukOQ9Ay10Pb8WJjry8oGhN326e2nttygccqOB4w/edit?usp=drive_link" target="_blank">Flextel Coxim</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1zOJAF8GiP2x2dhngO1-RKrZ-tjSnO3ewQz4IcylZo_w/edit?usp=drive_link" target="_blank">Flextel Jaraguari</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1hv4jyxe7mTIRwnvii49jVdjId-8DLoa3phnTF30rMbo/edit?usp=drive_link" target="_blank">Flextel Rio Brilhante</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1EAInqjr7TBowx0fcZki08sy0A_ebxahBMs5jG6QHPy4/edit?usp=drive_link" target="_blank">Flextel Rio Negro</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1jeFriltvhiy8ghpRiLfef8tL0xXxFRxiWOF5aMSar0s/edit?usp=drive_link" target="_blank">Flextel Rio Verde</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1duuL5wHXeBYZtcPfFHB0Km4xfVWOwfL2ZmDma7ExCoE/edit?usp=drive_link" target="_blank">Flextel São Gabriel do Oeste</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1sA-PBJONdNpI_5EhEksyrPFdJObWGSIzXzmjlCHuwbk/edit?usp=drive_link" target="_blank">Flextel Sidrolandia</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1JEruxP5W-nq8BBqKkiY7IsoYeNxKRvUC6hUkbtUKsNc/edit?usp=drive_link" target="_blank">Flextel Sonora</a></li>
-    </ul>
-  </div>
-
-  <script>
-    function toggleTheme() {
-      const body = document.body;
-      body.classList.toggle('dark-mode');
-      body.classList.toggle('light-mode');
-    }
-
-    function filterLinks() {
-      let input = document.getElementById('search').value.toLowerCase();
-      let links = document.querySelectorAll('ul li');
-      
-      links.forEach(link => {
-        let text = link.textContent.toLowerCase();
-        link.style.display = text.includes(input) ? '' : 'none';
-      });
-    }
-  </script>
+<body>
+    <div class="container">
+        <h2>Links de Acesso</h2>
+        <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
+        <ul>
+            <li><a href="https://docs.google.com/spreadsheets/d/1uAzD2EEaGq-4JTwpvBiWn37DyOwqDBAQ0fEHdTiHYXg/edit?usp=drive_link" target="_blank">Conexão67 Campo Grande</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1GpgTcSUgP6U4iQXxBqAq1P_LUD2-bK7uHri1ZysI4VE/edit?usp=drive_link" target="_blank">Conexão67 Rochedo e Corguinho</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/15Pe6aQUfPdQnfFNaWc_13_V7k-avQRiWkw7TygTrKrk/edit?usp=drive_link" target="_blank">Connect</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1Ev3ddLFINI8QiPTVx2OsmV2dQOn3i0nx3ZE7SQFLGh8/edit?usp=drive_link" target="_blank">Flextel Alcinópolis</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1g7f_BaQiRew6elyPP7eIq6BZ6fGWEfnmsOLLyj7jZyU/edit?usp=drive_link" target="_blank">Flextel Bandeirantes</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1g53Hg3zWsOSu2jJysYXYXsL1L3IY4u6D6WNA859E3YM/edit?usp=drive_link" target="_blank">Flextel Campo Grande</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1jlqlukOQ9Ay10Pb8WJjry8oGhN326e2nttygccqOB4w/edit?usp=drive_link" target="_blank">Flextel Coxim</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1zOJAF8GiP2x2dhngO1-RKrZ-tjSnO3ewQz4IcylZo_w/edit?usp=drive_link" target="_blank">Flextel Jaraguari</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1hv4jyxe7mTIRwnvii49jVdjId-8DLoa3phnTF30rMbo/edit?usp=drive_link" target="_blank">Flextel Rio Brilhante</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1EAInqjr7TBowx0fcZki08sy0A_ebxahBMs5jG6QHPy4/edit?usp=drive_link" target="_blank">Flextel Rio Negro</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1jeFriltvhiy8ghpRiLfef8tL0xXxFRxiWOF5aMSar0s/edit?usp=drive_link" target="_blank">Flextel Rio Verde</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1duuL5wHXeBYZtcPfFHB0Km4xfVWOwfL2ZmDma7ExCoE/edit?usp=drive_link" target="_blank">Flextel São Gabriel do Oeste</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1sA-PBJONdNpI_5EhEksyrPFdJObWGSIzXzmjlCHuwbk/edit?usp=drive_link" target="_blank">Flextel Sidrolandia</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1JEruxP5W-nq8BBqKkiY7IsoYeNxKRvUC6hUkbtUKsNc/edit?usp=drive_link" target="_blank">Flextel Sonora</a></li>
+        </ul>
+    </div>
 </body>
 </html>
