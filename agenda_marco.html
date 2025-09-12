@@ -10,90 +10,35 @@
       transition: background-color 0.3s, color 0.3s;
       padding: 20px;
     }
+    .light-mode { background: #f4f4f4; color: #333; }
+    .dark-mode { background: #1e1e1e; color: #f1f1f1; }
 
-    .light-mode {
-      background-color: #f4f4f4;
-      color: #333;
-    }
-
-    .dark-mode {
-      background-color: #1e1e1e;
-      color: #f1f1f1;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: inherit;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      margin-bottom: 15px;
-    }
+    .container { max-width: 600px; margin: auto; padding: 20px; }
+    h2 { margin-bottom: 15px; }
 
     input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border: 1px solid #ccc; border-radius: 5px;
     }
+    .dark-mode input { background: #333; color: #f1f1f1; border: 1px solid #555; }
 
-    .dark-mode input {
-      background-color: #333;
-      color: #f1f1f1;
-      border: 1px solid #555;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      margin: 10px 0;
-    }
-
+    ul { list-style: none; padding: 0; }
+    li { margin: 10px 0; }
     a {
-      display: block;
-      padding: 10px;
-      background: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.3s;
+      display: block; padding: 10px; background: #007bff; color: white;
+      text-decoration: none; border-radius: 5px; transition: background 0.3s;
     }
-
-    a:hover {
-      background: #0056b3;
-    }
+    a:hover { background: #0056b3; }
+    .dark-mode a { background: #333; color: #f1f1f1; }
+    .dark-mode a:hover { background: #555; }
 
     .theme-toggle {
-      margin-bottom: 15px;
-      padding: 8px 16px;
-      border: none;
-      background: #444;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
+      margin-bottom: 15px; padding: 8px 16px; border: none;
+      background: #444; color: #fff; border-radius: 5px; cursor: pointer;
     }
-
-    .light-mode .theme-toggle {
-      background: #ddd;
-      color: #333;
-    }
-
-    .light-mode .theme-toggle:hover {
-      background: #ccc;
-    }
-
-    .dark-mode .theme-toggle:hover {
-      background: #666;
-    }
+    .light-mode .theme-toggle { background: #ddd; color: #333; }
+    .light-mode .theme-toggle:hover { background: #ccc; }
+    .dark-mode .theme-toggle:hover { background: #666; }
   </style>
 </head>
 <body class="light-mode">
@@ -101,39 +46,88 @@
     <button class="theme-toggle" onclick="toggleTheme()">Alternar Tema</button>
     <h2>Links de Acesso</h2>
     <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
-    <ul>
-      <li><a href="https://docs.google.com/spreadsheets/d/1XbcVM9jepbx-4x_GmvZ5IEeg1MIcFmYXLNF44bELVSM/edit?usp=drive_link" target="_blank">Conexão67 CG</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1yWvkDYetTJkMI4pcUq3v0c2Ibk7pM8QayKFhE3CZDkM/edit?usp=drive_link" target="_blank">Conexão67 Rochedo e Corguinho</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1sR1lw0LzQlj2d3uL-O2QPqSyLkVb-NnbqHkwtCklyAE/edit?usp=drive_link" target="_blank">Connect</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1aO1g9V70PIHaDujwPb4R9ZXr4ss7vQOCjsB8HF43GYk/edit?usp=drive_link" target="_blank">Flextel Alcinópolis/Figueirão</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/15w2JmrMOytei06mcoa-OWy9iW7Yg5kt7sHdNWhgwI_k/edit?usp=drive_link" target="_blank">Flextel Bandeirantes</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1_KD3uRxjpN9PULrlhrTGkIyyndp06woWv35KitkPziw/edit?usp=drive_link" target="_blank">Flextel Campo Grande</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1KPSW0o1hT75VLoHlBNsTZ7tp472gjkRKlwDYOMi8xtE/edit?usp=drive_link" target="_blank">Flextel Campo Grande Retiradas</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1DvsxUOT0VuRf9WE7YZXECnjrc8dk6yobNZ6f33KZJIM/edit?usp=drive_link" target="_blank">Flextel Coxim</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1jDXWzajFdpQhfPVXlKbMYHLBOW7dt1wqFVb32m17TYk/edit?usp=drive_link" target="_blank">Flextel Jaraguari</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1M0X3dIQKp0lCA8Rqxf7NNoLAv-JF7fu8ndjj9lT9JfA/edit?usp=drive_link" target="_blank">Flextel Rio Brilhante</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1Idw6KFXHg0Lg3o0ZEPgzI9fOa3CgXcTmeiLxmq7-iHw/edit?usp=drive_link" target="_blank">Flextel Rio Negro</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1TUu6CASWqQLpE5X05xn_BizRdAiavKGOcBPXznFzOJc/edit?usp=drive_link" target="_blank">Flextel Rio Verde</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1lM2Zhvof4stGhuau15bMvDXawgMciK_LazCRIKWctsY/edit?usp=drive_link" target="_blank">Flextel São Gabriel do Oeste</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1oFGvbbYN_E-W20Nc8-ZvkyIfwoHnhHUEYZkqiy8RR88/edit?usp=drive_link" target="_blank">Flextel Sidrolandia</a></li>
-      <li><a href="https://docs.google.com/spreadsheets/d/1nNIQfGYdnR7ofrIPQ5CfwFrYECiCK3uZrtBJTTF2eJ8/edit?usp=drive_link" target="_blank">Flextel Sonora</a></li>
-    </ul>
+    <ul id="linksList"></ul>
   </div>
 
   <script>
+    // Cola os links aqui no mesmo formato que você recebe
+    const rawLinks = `
+Conexão67 CG
+https://docs.google.com/spreadsheets/d/1RNeK98E9dSiPlNBfATdrJUs_JkstbAv5z-BGbjTZYps/edit?usp=drive_link
+
+Conexão67 Rochedo e Corguinho
+https://docs.google.com/spreadsheets/d/1RvlG4rJP7fVYmDvj-ljHIrvOlm-RuW9SMZXen043q7M/edit?usp=drive_link
+
+Connect
+https://docs.google.com/spreadsheets/d/1hZtybTS1ZPZQMIEN48E7vl4BwoHoT2u27HtMGyBlAeM/edit?usp=drive_link
+
+Flextel Alcinópolis/Figueirão
+https://docs.google.com/spreadsheets/d/1SwDncYw5vLH3YhoH75-GfDXq8TVgo2nouLiYPT3BtTE/edit?usp=drive_link
+
+Flextel Bandeirantes
+https://docs.google.com/spreadsheets/d/1hndpXiJB8AaQqZ7WZ9ojUZPdenqJxc6DZma2rDq9txQ/edit?usp=drive_link
+
+Flextel Campo Grande
+https://docs.google.com/spreadsheets/d/1CUo5P-nfomJUM0fmcMBOAeyHuiikVs_oJuOXf2HUMCw/edit?usp=drive_link
+
+Flextel Campo Grande Retiradas
+https://docs.google.com/spreadsheets/d/108pD73grfkVq1giLjZbaMJP1y2etE-A93HAQoYFuUgY/edit?usp=drive_link
+
+Flextel Coxim
+https://docs.google.com/spreadsheets/d/166qaKiCSYNVFRBe_TmegdpS3qW-PagdaLa5m4ZidJhc/edit?usp=drive_link
+
+Flextel Jaraguari
+https://docs.google.com/spreadsheets/d/1hmgC2pZAAMSbsrq-YKWVQJhfkG3aAh8mJ_ivpimLbAo/edit?usp=drive_link
+
+Flextel Rio Brilhante
+https://docs.google.com/spreadsheets/d/1SPRiZrUWwsOgs5T6DHhevZTrIKOU28cez8rmIMTBRdQ/edit?usp=drive_link
+
+Flextel Rio Negro
+https://docs.google.com/spreadsheets/d/1jzY7jOlvUmu7_g6JRCYhyqaF_rE7MMLzH2gfmQuwwm0/edit?usp=drive_link
+
+Flextel Rio Verde
+https://docs.google.com/spreadsheets/d/1sYK7FwE-_Y0xyWnm8sMVKBz_jKqyU-ZSHk2cfIqQfF4/edit?usp=drive_link
+
+Flextel São Gabriel do Oeste
+https://docs.google.com/spreadsheets/d/1-LSPzEfR8CGvTF8tp-g-i3NVYNT08ZAbQYkA3oGhr1E/edit?usp=drive_link
+
+Flextel Sidrolandia
+https://docs.google.com/spreadsheets/d/1N1G1h8-pqE1smtj1dKmRz8rbQs-GTYeheOjDZOgFJm4/edit?usp=drive_link
+
+Flextel Sonora
+https://docs.google.com/spreadsheets/d/1i1o8Y_FrPtkVALkhj4TD5kHuDspj1PZumMnMGrOHYvM/edit?usp=drive_link
+`;
+
+    // Converte em array de pares [nome, link]
+    const lines = rawLinks.trim().split("\n").map(l => l.trim()).filter(l => l);
+    const pairs = [];
+    for (let i = 0; i < lines.length; i += 2) {
+      pairs.push({ name: lines[i], url: lines[i+1] });
+    }
+
+    // Renderiza lista
+    const ul = document.getElementById("linksList");
+    pairs.forEach(p => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = p.url;
+      a.target = "_blank";
+      a.textContent = p.name;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
     function toggleTheme() {
-      const body = document.body;
-      body.classList.toggle('dark-mode');
-      body.classList.toggle('light-mode');
+      document.body.classList.toggle('dark-mode');
+      document.body.classList.toggle('light-mode');
     }
 
     function filterLinks() {
       let input = document.getElementById('search').value.toLowerCase();
-      let links = document.querySelectorAll('ul li');
-      
-      links.forEach(link => {
-        let text = link.textContent.toLowerCase();
-        link.style.display = text.includes(input) ? '' : 'none';
+      let links = document.querySelectorAll('#linksList li');
+      links.forEach(li => {
+        let text = li.textContent.toLowerCase();
+        li.style.display = text.includes(input) ? '' : 'none';
       });
     }
   </script>
