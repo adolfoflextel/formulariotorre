@@ -374,72 +374,71 @@
         }
 
         function pesquisar() {
-            const termoBusca = document.getElementById("searchInput").value.toLowerCase();
-            const resultadosTbody = document.querySelector("#resultados tbody");
-            resultadosTbody.innerHTML = "";
+    const termoBusca = document.getElementById("searchInput").value.toLowerCase();
+    const resultadosTbody = document.querySelector("#resultados tbody");
+    resultadosTbody.innerHTML = "";
 
-            let dadosFiltrados = filtroFilial ? dadosPorFilial[filtroFilial] || [] : [].concat(...Object.values(dadosPorFilial));
+    let dadosFiltrados = filtroFilial ? dadosPorFilial[filtroFilial] || [] : [].concat(...Object.values(dadosPorFilial));
 
-            if (!termoBusca.trim() && !filtroFilial) {
-                resultadosTbody.innerHTML = "<tr><td colspan='7' style='text-align: center;'>Por favor, digite um termo de busca ou escolha um filtro de filial.</td></tr>";
-                return;
-            }
+    if (!termoBusca.trim() && !filtroFilial) {
+        resultadosTbody.innerHTML = "<tr><td colspan='9' style='text-align: center;'>Por favor, digite um termo de busca ou escolha um filtro de filial.</td></tr>";
+        return;
+    }
 
-            dadosFiltrados = dadosFiltrados.filter(item => {
-                return Object.values(item).some(value =>
-                    String(value).toLowerCase().includes(termoBusca)
-                );
-            });
+    dadosFiltrados = dadosFiltrados.filter(item => {
+        return Object.values(item).some(value =>
+            String(value).toLowerCase().includes(termoBusca)
+        );
+    });
 
-            if (dadosFiltrados.length === 0) {
-                resultadosTbody.innerHTML = "<tr><td colspan='7' style='text-align: center;'>Nenhum resultado encontrado.</td></tr>";
-                return;
-            }
+    if (dadosFiltrados.length === 0) {
+        resultadosTbody.innerHTML = "<tr><td colspan='9' style='text-align: center;'>Nenhum resultado encontrado.</td></tr>";
+        return;
+    }
 
-            dadosFiltrados.forEach(item => {
-                const tr = document.createElement("tr");
+    dadosFiltrados.forEach(item => {
+        const tr = document.createElement("tr");
 
-                const tdTransmissor = document.createElement("td");
-                tdTransmissor.textContent = item.transmissor;
-                tr.appendChild(tdTransmissor);
+        const tdTransmissor = document.createElement("td");
+        tdTransmissor.textContent = item.transmissor;
+        tr.appendChild(tdTransmissor);
 
-                const tdVlan = document.createElement("td");
-                tdVlan.textContent = item.vlan;
-                tr.appendChild(tdVlan);
+        const tdVlan = document.createElement("td");
+        tdVlan.textContent = item.vlan;
+        tr.appendChild(tdVlan);
 
-                const tdF601 = document.createElement("td");
-                tdF601.textContent = item.f601;
-                tr.appendChild(tdF601);
+        const tdF601 = document.createElement("td");
+        tdF601.textContent = item.f601;
+        tr.appendChild(tdF601);
 
-                const tdF670 = document.createElement("td");
-                tdF670.textContent = item.f670;
-                tr.appendChild(tdF670);
+        const tdF670 = document.createElement("td");
+        tdF670.textContent = item.f670;
+        tr.appendChild(tdF670);
 
-                const tdF6600 = document.createElement("td");
-                tdF6600.textContent = item.f6600;
-                tr.appendChild(tdF6600);
+        const tdF6600 = document.createElement("td");
+        tdF6600.textContent = item.f6600;
+        tr.appendChild(tdF6600);
 
-                const tdHuaweiBridge = document.createElement("td");
-                tdHuaweiBridge.textContent = item.huaweiBridge;
-                tr.appendChild(tdHuaweiBridge);
+        const tdHuaweiBridge = document.createElement("td");
+        tdHuaweiBridge.textContent = item.huaweiBridge;
+        tr.appendChild(tdHuaweiBridge);
 
-                const tdHuaweiRoteada = document.createElement("td");
-                tdHuaweiRoteada.textContent = item.huaweiRoteada;
-                tr.appendChild(tdHuaweiRoteada);
+        const tdHuaweiRoteada = document.createElement("td");
+        tdHuaweiRoteada.textContent = item.huaweiRoteada;
+        tr.appendChild(tdHuaweiRoteada);
 
-                 const tdFhttBridge = document.createElement("td");
-               tdFhttBridge.textContent = item.fhttbridge;
-                tr.appendChild(tdfhttbridge);
+        const tdFhttBridge = document.createElement("td");
+        tdFhttBridge.textContent = item.fhttbridge;
+        tr.appendChild(tdFhttBridge);
 
-                 const tdFhttRoteada = document.createElement("td");
-                tdFhttRoteada.textContent = item.fhttroteada;
-                tr.appendChild(tdfhttbridge);
+        const tdFhttRoteada = document.createElement("td");
+        tdFhttRoteada.textContent = item.fhttroteada;
+        tr.appendChild(tdFhttRoteada);
 
+        resultadosTbody.appendChild(tr);
+    });
+}
 
-                
-                resultadosTbody.appendChild(tr);
-            });
-        }
 
         // Alternar entre modo claro e escuro
         function toggleMode() {
@@ -459,6 +458,7 @@
     </script>
 </body>
 </html>
+
 
 
 
