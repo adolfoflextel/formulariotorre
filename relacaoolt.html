@@ -228,7 +228,7 @@
 { transmissor: "HWEI_UNIAO_FREEWAY", vlan: 772, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 44, huaweiRoteada: 43 },
 { transmissor: "HWEI_NOVALIMA_FREEWAY", vlan: 772, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: 44, huaweiRoteada: 43 },    
 { transmissor: "FHTT_AERO_RANCHO_FREEWAY", vlan: 772, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO", fhttbridge: 45, fhttroteada: 46 },
-{ transmissor: "FHTT_MORENINHAS_FREEWAY", vlan: 772, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO", fhttbridge: 45, fhttroteada: 46 },
+{ transmissor: "FHTT_MORENINHAS_FREEWAY", vlan: 772, f601: "NÃO PERMITIDO", f670: "NÃO PERMITIDO", f6600: "NÃO PERMITIDO", huaweiBridge: "NÃO PERMITIDO", huaweiRoteada: "NÃO PERMITIDO", fhttbridge: 45, fhttroteada: 46 }
             ],
             "WIFI": [{ "transmissor": "ZTE_NASSER_WIFI", "vlan": 4002, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
     { "transmissor": "ZTE_CAIÇARA_67", "vlan": 4003, "f601": 18, "f670": 20, "f6600": 20, "huaweiBridge": "NÃO PERMITIDO", "huaweiRoteada": "NÃO PERMITIDO" },
@@ -427,6 +427,16 @@
                 tdHuaweiRoteada.textContent = item.huaweiRoteada;
                 tr.appendChild(tdHuaweiRoteada);
 
+                 const tdHuaweiRoteada = document.createElement("td");
+                tdHuaweiRoteada.textContent = item.fhttbridge;
+                tr.appendChild(tdFhttbridge);
+
+                 const tdHuaweiRoteada = document.createElement("td");
+                tdHuaweiRoteada.textContent = item.fhttroteada;
+                tr.appendChild(tdFhttbridge);
+
+
+                
                 resultadosTbody.appendChild(tr);
             });
         }
@@ -449,5 +459,6 @@
     </script>
 </body>
 </html>
+
 
 
