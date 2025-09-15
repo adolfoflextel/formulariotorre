@@ -1,135 +1,133 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Links de Acesso</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      transition: background-color 0.3s, color 0.3s;
-      padding: 20px;
-    }
-    .light-mode { background: #f4f4f4; color: #333; }
-    .dark-mode { background: #1e1e1e; color: #f1f1f1; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Links de Acesso</title>
+<style>
+body { font-family: Arial, sans-serif; transition: background-color 0.3s, color 0.3s; padding: 20px; }
+.light-mode { background: #f4f4f4; color: #333; }
+.dark-mode { background: #1e1e1e; color: #f1f1f1; }
 
-    .container { max-width: 600px; margin: auto; padding: 20px; }
-    h2 { margin-bottom: 15px; }
+.container { max-width: 600px; margin: auto; padding: 20px; }
+h2 { margin-bottom: 15px; }
+input[type=text], input[type=file], select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+.dark-mode input, .dark-mode select { background: #333; color: #f1f1f1; border: 1px solid #555; }
 
-    input {
-      width: 100%; padding: 10px; margin-bottom: 10px;
-      border: 1px solid #ccc; border-radius: 5px;
-    }
-    .dark-mode input { background: #333; color: #f1f1f1; border: 1px solid #555; }
+ul { list-style: none; padding: 0; }
+li { margin: 10px 0; }
+a { display: block; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; transition: background 0.3s; }
+a:hover { background: #0056b3; }
+.dark-mode a { background: #333; color: #f1f1f1; }
+.dark-mode a:hover { background: #555; }
 
-    ul { list-style: none; padding: 0; }
-    li { margin: 10px 0; }
-    a {
-      display: block; padding: 10px; background: #007bff; color: white;
-      text-decoration: none; border-radius: 5px; transition: background 0.3s;
-    }
-    a:hover { background: #0056b3; }
-    .dark-mode a { background: #333; color: #f1f1f1; }
-    .dark-mode a:hover { background: #555; }
-
-    .theme-toggle {
-      margin-bottom: 15px; padding: 8px 16px; border: none;
-      background: #444; color: #fff; border-radius: 5px; cursor: pointer;
-    }
-    .light-mode .theme-toggle { background: #ddd; color: #333; }
-    .light-mode .theme-toggle:hover { background: #ccc; }
-    .dark-mode .theme-toggle:hover { background: #666; }
-  </style>
+.theme-toggle { margin-bottom: 15px; padding: 8px 16px; border: none; background: #444; color: #fff; border-radius: 5px; cursor: pointer; }
+.light-mode .theme-toggle { background: #ddd; color: #333; }
+.light-mode .theme-toggle:hover { background: #ccc; }
+.dark-mode .theme-toggle:hover { background: #666; }
+</style>
 </head>
 <body class="light-mode">
-  <div class="container">
-    <button class="theme-toggle" onclick="toggleTheme()">Alternar Tema</button>
-    <h2>Links de Acesso</h2>
-    <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
-    <ul id="linksList"></ul>
-  </div>
+<div class="container">
+  <button class="theme-toggle" onclick="toggleTheme()">Alternar Tema</button>
+  <h2>Links de Acesso</h2>
 
-  <script>
-    // Cola os links aqui no mesmo formato que você recebe
-    const rawLinks = `
-Conexão67 CG
-https://docs.google.com/spreadsheets/d/1RNeK98E9dSiPlNBfATdrJUs_JkstbAv5z-BGbjTZYps/edit?usp=drive_link
+  <!-- Seleção de mês/ano -->
+  <label for="monthSelect">Selecionar Mês:</label>
+  <select id="monthSelect" onchange="loadMonth()"></select>
 
-Conexão67 Rochedo e Corguinho
-https://docs.google.com/spreadsheets/d/1RvlG4rJP7fVYmDvj-ljHIrvOlm-RuW9SMZXen043q7M/edit?usp=drive_link
+  <!-- Upload de arquivo -->
+  <input type="file" id="fileInput" accept=".txt">
 
-Connect
-https://docs.google.com/spreadsheets/d/1hZtybTS1ZPZQMIEN48E7vl4BwoHoT2u27HtMGyBlAeM/edit?usp=drive_link
+  <!-- Pesquisa -->
+  <input type="text" id="search" onkeyup="filterLinks()" placeholder="Pesquisar links...">
 
-Flextel Alcinópolis/Figueirão
-https://docs.google.com/spreadsheets/d/1SwDncYw5vLH3YhoH75-GfDXq8TVgo2nouLiYPT3BtTE/edit?usp=drive_link
+  <!-- Lista -->
+  <ul id="linksList"></ul>
+</div>
 
-Flextel Bandeirantes
-https://docs.google.com/spreadsheets/d/1hndpXiJB8AaQqZ7WZ9ojUZPdenqJxc6DZma2rDq9txQ/edit?usp=drive_link
+<script>
+const ul = document.getElementById("linksList");
+const monthSelect = document.getElementById("monthSelect");
 
-Flextel Campo Grande
-https://docs.google.com/spreadsheets/d/1CUo5P-nfomJUM0fmcMBOAeyHuiikVs_oJuOXf2HUMCw/edit?usp=drive_link
+// Gera lista de meses + anos (últimos 12 meses, por exemplo)
+function generateMonths() {
+  const now = new Date();
+  for (let i = 0; i < 12; i++) {
+    let date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let year = date.getFullYear();
+    let value = `${month}-${year}`;
+    let option = document.createElement("option");
+    option.value = value;
+    option.textContent = `${month}/${year}`;
+    if (i === 0) option.selected = true; // mês atual selecionado
+    monthSelect.appendChild(option);
+  }
+}
 
-Flextel Campo Grande Retiradas
-https://docs.google.com/spreadsheets/d/108pD73grfkVq1giLjZbaMJP1y2etE-A93HAQoYFuUgY/edit?usp=drive_link
+// Alterna tema
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  document.body.classList.toggle('light-mode');
+}
 
-Flextel Coxim
-https://docs.google.com/spreadsheets/d/166qaKiCSYNVFRBe_TmegdpS3qW-PagdaLa5m4ZidJhc/edit?usp=drive_link
+// Filtra links
+function filterLinks() {
+  let input = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('#linksList li').forEach(li => {
+    li.style.display = li.textContent.toLowerCase().includes(input) ? '' : 'none';
+  });
+}
 
-Flextel Jaraguari
-https://docs.google.com/spreadsheets/d/1hmgC2pZAAMSbsrq-YKWVQJhfkG3aAh8mJ_ivpimLbAo/edit?usp=drive_link
+// Converte texto em lista de links
+function renderLinks(rawText) {
+  ul.innerHTML = '';
+  const lines = rawText.trim().split("\n").map(l => l.trim()).filter(l => l);
+  for (let i = 0; i < lines.length; i += 2) {
+    const name = lines[i];
+    const url = lines[i+1];
+    if (!url) continue;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.textContent = name;
+    li.appendChild(a);
+    ul.appendChild(li);
+  }
+}
 
-Flextel Rio Brilhante
-https://docs.google.com/spreadsheets/d/1SPRiZrUWwsOgs5T6DHhevZTrIKOU28cez8rmIMTBRdQ/edit?usp=drive_link
+// Lê arquivo e salva no localStorage com chave do mês/ano
+document.getElementById('fileInput').addEventListener('change', function(event){
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    const key = "links-" + monthSelect.value;
+    localStorage.setItem(key, text);
+    renderLinks(text);
+  };
+  reader.readAsText(file);
+});
 
-Flextel Rio Negro
-https://docs.google.com/spreadsheets/d/1jzY7jOlvUmu7_g6JRCYhyqaF_rE7MMLzH2gfmQuwwm0/edit?usp=drive_link
+// Carrega os links do mês selecionado
+function loadMonth() {
+  const key = "links-" + monthSelect.value;
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    renderLinks(saved);
+  } else {
+    ul.innerHTML = "<li><em>Nenhum link salvo para este mês.</em></li>";
+  }
+}
 
-Flextel Rio Verde
-https://docs.google.com/spreadsheets/d/1sYK7FwE-_Y0xyWnm8sMVKBz_jKqyU-ZSHk2cfIqQfF4/edit?usp=drive_link
-
-Flextel São Gabriel do Oeste
-https://docs.google.com/spreadsheets/d/1-LSPzEfR8CGvTF8tp-g-i3NVYNT08ZAbQYkA3oGhr1E/edit?usp=drive_link
-
-Flextel Sidrolandia
-https://docs.google.com/spreadsheets/d/1N1G1h8-pqE1smtj1dKmRz8rbQs-GTYeheOjDZOgFJm4/edit?usp=drive_link
-
-Flextel Sonora
-https://docs.google.com/spreadsheets/d/1i1o8Y_FrPtkVALkhj4TD5kHuDspj1PZumMnMGrOHYvM/edit?usp=drive_link
-`;
-
-    // Converte em array de pares [nome, link]
-    const lines = rawLinks.trim().split("\n").map(l => l.trim()).filter(l => l);
-    const pairs = [];
-    for (let i = 0; i < lines.length; i += 2) {
-      pairs.push({ name: lines[i], url: lines[i+1] });
-    }
-
-    // Renderiza lista
-    const ul = document.getElementById("linksList");
-    pairs.forEach(p => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = p.url;
-      a.target = "_blank";
-      a.textContent = p.name;
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      document.body.classList.toggle('light-mode');
-    }
-
-    function filterLinks() {
-      let input = document.getElementById('search').value.toLowerCase();
-      let links = document.querySelectorAll('#linksList li');
-      links.forEach(li => {
-        let text = li.textContent.toLowerCase();
-        li.style.display = text.includes(input) ? '' : 'none';
-      });
-    }
-  </script>
+// Inicialização
+window.addEventListener("load", () => {
+  generateMonths();   // cria os meses
+  loadMonth();        // só depois carrega o mês atual
+});
+</script>
 </body>
 </html>
