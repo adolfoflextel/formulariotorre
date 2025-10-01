@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<title>Tempo sem Conexão (PDF)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  h2 { margin-bottom: 10px; }
+  #saida { white-space: pre; background: #f4f4f4; padding: 12px; border-radius: 6px; }
+</style>
+</head>
+<body>
+  <h2>Calculadora de Tempo sem Conexão</h2>
+  <input type="file" id="file" accept="application/pdf">
+  <button onclick="processarPDF()">Processar PDF</button>
+  <p id="msg"></p>
+  <div id="saida"></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
+function formatar(segundos) {
+  segundos = Math.floor(segundos);
+  const dias = Math.floor(segundos / 86400); segundos %= 86400;
+  const horas = Math.floor(segundos / 3600); segundos %= 3600;
+  const minutos = Math.floor(segundos / 60); const s = segundos % 60;
+  let out = "";
+  if (dias > 0) out += dias + "d ";
+  if (horas > 0) out += horas + "h ";
+  if (minutos > 0) out += minutos + "m ";
+  out += s + "s";
+  return out;
+}
+
+async function processarPDF() {
+  const file = document.getElementById("file").files[0];
+  if (!file) { alert("Selecione um PDF"); return; }
+
+  document.getElementById("msg").textContent = "Lendo PDF...";
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  let linhas = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const items = content.items.map(it => it.str).join(" ");
+    linhas.push(items);
+  }
+
+  const texto = linhas.join("\n");
+
+  // Captura pares de datas dd/mm/yyyy hh:mm:ss
+  const regex = /(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})/g;
+  const todasDatas = [...texto.matchAll(regex)].map(m => m[1]);
+
+  // Cada registro tem 2 datas (inicial, final)
+  const registros = [];
+  for (let i = 0; i < todasDatas.length; i += 2) {
+    registros.push({
+      inicio: todasDatas[i],
+      fim: todasDatas[i+1]
+    });
+  }
+
+  // Agora calcula intervalo entre fim[i] e inicio[i+1]
+  let totalSegundos = 0;
+  let detalhes = "";
+  for (let i = 0; i < registros.length - 1; i++) {
+    const fim = parseDate(registros[i].fim);
+    const proxInicio = parseDate(registros[i+1].inicio);
+    const diff = (proxInicio - fim) / 1000;
+    if (diff > 0) {
+      totalSegundos += diff;
+      detalhes += `${registros[i].fim} → ${registros[i+1].inicio} = ${formatar(diff)}\n`;
+    } else {
+      detalhes += `${registros[i].fim} → ${registros[i+1].inicio} = sobreposição\n`;
+    }
+  }
+
+  detalhes += `\nTOTAL: ${formatar(totalSegundos)} (${totalSegundos} s)`;
+  document.getElementById("saida").textContent = detalhes;
+  document.getElementById("msg").textContent = "Concluído.";
+}
+
+function parseDate(str) {
+  // transforma "dd/mm/yyyy hh:mm:ss" em Date
+  const [d, m, y, h, mi, s] = str.match(/\d+/g);
+  return new Date(`${y}-${m}-${d}T${h}:${mi}:${s}`);
+}
+</script>
+</body>
+</html>
