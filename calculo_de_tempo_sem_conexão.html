@@ -91,5 +91,81 @@ function parseDate(str) {
   return new Date(`${y}-${m}-${d}T${h}:${mi}:${s}`);
 }
 </script>
+
+<hr>
+<h2>Calculadora de Vencimento</h2>
+<label for="vencimento">Data de Vencimento da Fatura:</label>
+<input type="date" id="vencimento">
+<button onclick="calcularVencimento()">Calcular</button>
+
+<div id="resultadoVencimento"></div>
+
+<script>
+function calcularVencimento() {
+  const input = document.getElementById("vencimento").value;
+  if (!input) {
+    alert("Informe a data de vencimento!");
+    return;
+  }
+
+  const venc = new Date(input + "T00:00:00");
+  const hoje = new Date();
+
+  // datas de mudança de status
+  const reduzido = new Date(venc); reduzido.setDate(venc.getDate() + 15);
+  const bloqueado = new Date(venc); bloqueado.setDate(venc.getDate() + 45);
+
+  const diffDias = Math.floor((hoje - venc) / (1000*60*60*24));
+  const faltamReducao = Math.floor((reduzido - hoje) / (1000*60*60*24));
+  const faltamBloqueio = Math.floor((bloqueado - hoje) / (1000*60*60*24));
+
+  let status = "";
+  let classe = "";
+
+  if (diffDias < 0) {
+    status = `Cliente ainda está em dia. Vencimento será em ${Math.abs(diffDias)} dias.`;
+    classe = "verde";
+  } else if (diffDias < 15) {
+    status = `Cliente EM DIA .`;
+    classe = "verde";
+  } else if (diffDias < 45) {
+    status = `Cliente com SINAL REDUZIDO .`;
+    classe = "amarelo";
+  } else {
+    status = `Cliente com SINAL BLOQUEADO .`;
+    classe = "vermelho";
+  }
+
+  document.getElementById("resultadoVencimento").innerHTML = `
+    <p><strong>Data de Vencimento:</strong> ${venc.toLocaleDateString()}</p>
+    <p><strong>Data Reduzido (+15 dias):</strong> ${reduzido.toLocaleDateString()} 
+       ${faltamReducao > 0 ? `(faltam ${faltamReducao} dias)` : `(há ${Math.abs(faltamReducao)} dias)`}</p>
+    <p><strong>Data Bloqueio (+45 dias):</strong> ${bloqueado.toLocaleDateString()} 
+       ${faltamBloqueio > 0 ? `(faltam ${faltamBloqueio} dias)` : `(há ${Math.abs(faltamBloqueio)} dias)`}</p>
+    <p class="status ${classe}">${status}</p>
+  `;
+}
+</script>
+
+<style>
+  .status {
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    display: inline-block;
+  }
+  .verde { background: #d4edda; color: #155724; }
+  .amarelo { background: #fff3cd; color: #856404; }
+  .vermelho { background: #f8d7da; color: #721c24; }
+</style>
+</script>
+
+
+
+
+
 </body>
 </html>
+
+
